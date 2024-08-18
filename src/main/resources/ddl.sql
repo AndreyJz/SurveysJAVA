@@ -16,7 +16,7 @@ CREATE TABLE roles (
 CREATE TABLE users (
                        id INT AUTO_INCREMENT,
                        enabled BOOLEAN,
-                       username VARCHAR(12),
+                       username VARCHAR(12) UNIQUE,
                        password VARCHAR(255),
                        CONSTRAINT pk_users_id PRIMARY KEY (id)
 );
@@ -120,3 +120,6 @@ CREATE TABLE survey_json (
                              CONSTRAINT pk_survey_json_id PRIMARY KEY (id),
                              CONSTRAINT fk_survey_json_survey_id FOREIGN KEY (survey_id) REFERENCES surveys(id)
 );
+
+INSERT INTO surveys (name, description, created_at, updated_at)
+VALUES ('Example Survey', 'Survey to try the stuff', NOW(), NOW());
