@@ -35,14 +35,14 @@ public class UpdateController extends JFrame implements ActionListener {
     private JComboBox<String> selectComboBox;
     private Map<String, String> types;
     private List<Component> components = new ArrayList<>();
+    private Map<String,List<Object>> mapOfList;
 
-    public UpdateController(GlobalService entity, Object updateService, Object listServiceEntity, Object listService, Object findServiceEntity, Object findServiceID, Object findService) {
+    public UpdateController(GlobalService entity, Object updateService, Object listService, Object findServiceEntity, Map<String, List<Object>> mapOfList) {
         this.entity = entity;
         this.updateService = updateService;
         this.listService = listService;
         this.findServiceEntity = findServiceEntity;
-        this.findServiceID = findServiceID;
-        this.findService = findService;
+        this.mapOfList = mapOfList;
 
         setTitle("Update " + entity.getClass().getSimpleName());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -61,7 +61,7 @@ public class UpdateController extends JFrame implements ActionListener {
         selectLabel.setFont(new Font("Calibri", Font.BOLD, 25));
         selectLabel.setForeground(new Color(236, 224, 220));
 
-        selectComboBox = generateComboBox(entity, propertyName, listServiceEntity);
+        selectComboBox = generateComboBox(entity);
 
         updatedButton = new JButton("Next ->");
         updatedButton.addActionListener(this);
@@ -101,7 +101,16 @@ public class UpdateController extends JFrame implements ActionListener {
                 contentPanel.add(label);
                 Component comp = null;
                 if (v.equals("JComboBox")) {
-                    comp = generateComboBox(entity, propertyName, listService);
+
+                    mapOfList.forEach((key,val) -> {
+                        if (propertyID.contains(key)) {
+                            this.listService = val.get(0);
+                            this.findServiceID = val.get(1);
+                            this.findService = val.get(2);
+                        }
+                    });
+
+                    comp = generateComboBox(entity);
                     comp.setFont(new Font("Calibri", Font.BOLD, 25));
                     JComboBox<?> comboBox = (JComboBox<?>) comp;
                     try {
@@ -175,7 +184,7 @@ public class UpdateController extends JFrame implements ActionListener {
         add(contentPanel);
     }
 
-    private JComboBox<String> generateComboBox(GlobalService entity, String propertyName, Object listService) {
+    private JComboBox<String> generateComboBox(GlobalService entity) {
         JComboBox<String> comboBox = new JComboBox<>();
         try {
             Method listMethod = listService.getClass().getMethod("list");

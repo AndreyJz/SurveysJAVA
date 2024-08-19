@@ -24,6 +24,7 @@ public class ChapterController {
     private CreateChapterUC createChapterUC;
     private UpdateChapterUC updateChapterUC;
     private DeleteChapterUC deleteChapterUC;
+    Map<String, List<Object>> mapOfList;
 
     public ChapterController(CreateChapterUC createChapterUC, ListSurveysUC listSurveysUC, FindSurveyByNameUC findSurveyByNameUC) {
         this.createChapterUC = createChapterUC;
@@ -58,7 +59,7 @@ public class ChapterController {
         Chapter chapter = new Chapter();
         List<Object> listOfSurvey = Arrays.asList(listSurveysUC,findSurveyByNameUC);
         List<Object> listOfChapters = Arrays.asList(listChaptersUC,findChapterByNameUC);
-        Map<String, List<Object>> mapOfList = new LinkedHashMap<>();
+        mapOfList = new LinkedHashMap<>();
 
         mapOfList.put("Survey", listOfSurvey);
         mapOfList.put("Chapter", listOfChapters);
@@ -67,7 +68,13 @@ public class ChapterController {
 
     public void updateChapter() {
         Chapter chapter = new Chapter();
-        this.updateController = new UpdateController(chapter, updateChapterUC, listChaptersUC, listSurveysUC, findChapterByNameUC, findSurveyByIdUC, findSurveyByNameUC);
+        List<Object> listOfSurvey = Arrays.asList(listSurveysUC,findSurveyByIdUC,findSurveyByNameUC);
+        List<Object> listOfChapters = Arrays.asList(listChaptersUC,findChapterByNameUC);
+        mapOfList = new LinkedHashMap<>();
+
+        mapOfList.put("Survey", listOfSurvey);
+        mapOfList.put("Chapter", listOfChapters);
+        this.updateController = new UpdateController(chapter, updateChapterUC, listChaptersUC, findChapterByNameUC, mapOfList);
     }
 
     public void deleteChapter() {
