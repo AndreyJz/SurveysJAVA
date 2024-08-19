@@ -28,13 +28,13 @@ public class ListController extends JFrame {
         try {
             Method listMethod = listService.getClass().getMethod("list");
             List<?> items = (List<?>) listMethod.invoke(listService);
-            showMedicinesTable(items);
+            showItemsTable(items);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void showMedicinesTable(List<?> items) {
+    private void showItemsTable(List<?> items) {
         types = entity.getTypes();
         Vector<String> columns = new Vector<>(types.keySet());
 

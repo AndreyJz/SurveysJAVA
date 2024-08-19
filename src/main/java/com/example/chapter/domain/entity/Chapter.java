@@ -79,8 +79,9 @@ public class Chapter implements GlobalService {
     @Override
     public Map<String, String> getTypes() {
         Map<String, String> lista = new LinkedHashMap<>();
-//        lista.put("CreatedAt", "TextField");
-//        lista.put("UpdatedAt", "TextField");
+        lista.put("Id","Null");
+        lista.put("CreatedAt", "Null");
+        lista.put("UpdatedAt", "Null");
         lista.put("ChapterNumber", "TextField");
         lista.put("ChapterTitle", "TextField");
         lista.put("SurveyId", "JComboBox");

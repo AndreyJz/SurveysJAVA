@@ -306,9 +306,9 @@ public class AdminForumController extends JFrame implements ActionListener {
 //            SurveyController uiSurvey = new SurveyController(fcsuc);
 //            uiSurvey.FindSurveyByID();
         } else if (entity.equals("Chapter")) {
-            FindChapterByIdUC fcsuc = new FindChapterByIdUC(cs);
-//            ChapterController uiChapter = new ChapterController(fcsuc);
-//            uiChapter.FindChapterByID();
+            FindChapterByIdUC fci = new FindChapterByIdUC(cs);
+            ChapterController cc = new ChapterController(fci);
+            cc.findChapterById();
         } else if (entity.equals("Question")) {
 //            FindQuestionByIdDC fcsuc = new FindQuestionByIdDC(qs);
 //            QuestionController uiQuestion = new QuestionController(fcsuc);

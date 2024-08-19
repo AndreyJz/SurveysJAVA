@@ -123,3 +123,10 @@ CREATE TABLE survey_json (
 
 INSERT INTO surveys (name, description, created_at, updated_at)
 VALUES ('Example Survey', 'Survey to try the stuff', NOW(), NOW());
+
+INSERT INTO roles (name) VALUES ('admin');
+INSERT INTO roles (name) VALUES ('user');
+INSERT INTO users (enabled, username, password) VALUES (true, 'jholver', 'thekiller');
+INSERT INTO users (enabled, username, password) VALUES (true, 'andrey', '070905123');
+INSERT INTO users_roles (role_id, user_id) VALUES (1,1);
+INSERT INTO users_roles (role_id, user_id) VALUES (2,2);

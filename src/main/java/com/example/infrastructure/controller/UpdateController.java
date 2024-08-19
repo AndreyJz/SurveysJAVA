@@ -91,80 +91,81 @@ public class UpdateController extends JFrame implements ActionListener {
         backButton.addActionListener(this);
 
         types = entity.getTypes();
-        System.out.println(types);
 
         types.forEach((k, v) -> {
-            JLabel label = new JLabel(k);
-            label.setFont(new Font("Calibri", Font.BOLD, 25));
-            label.setForeground(new Color(236, 224, 220));
-            label.setHorizontalAlignment(SwingConstants.CENTER);
-            contentPanel.add(label);
-            Component comp = null;
-            if (v.equals("JComboBox")) {
-                comp = generateComboBox(entity, propertyName, listService);
-                comp.setFont(new Font("Calibri", Font.BOLD, 25));
-                JComboBox<?> comboBox = (JComboBox<?>) comp;
-                try {
-                    Method getSelected = entity.getClass().getMethod("get" + propertyID);
-                    Object relatedEntityId = getSelected.invoke(entity);
+            if (!Objects.equals(k, "Id") && !Objects.equals(k, "CreatedAt") && !Objects.equals(k, "UpdatedAt")) {
+                JLabel label = new JLabel(k);
+                label.setFont(new Font("Calibri", Font.BOLD, 25));
+                label.setForeground(new Color(236, 224, 220));
+                label.setHorizontalAlignment(SwingConstants.CENTER);
+                contentPanel.add(label);
+                Component comp = null;
+                if (v.equals("JComboBox")) {
+                    comp = generateComboBox(entity, propertyName, listService);
+                    comp.setFont(new Font("Calibri", Font.BOLD, 25));
+                    JComboBox<?> comboBox = (JComboBox<?>) comp;
+                    try {
+                        Method getSelected = entity.getClass().getMethod("get" + propertyID);
+                        Object relatedEntityId = getSelected.invoke(entity);
 
-                    if (relatedEntityId != null) {
-                        Method findRelatedMethod = findServiceID.getClass().getMethod("find", int.class);
-                        Optional<?> result = (Optional<?>) findRelatedMethod.invoke(findServiceID, relatedEntityId);
+                        if (relatedEntityId != null) {
+                            Method findRelatedMethod = findServiceID.getClass().getMethod("find", int.class);
+                            Optional<?> result = (Optional<?>) findRelatedMethod.invoke(findServiceID, relatedEntityId);
 
-                        if (result.isPresent()) {
-                            Object relatedEntity = result.get();
-                            Method getPropertyMethod = relatedEntity.getClass().getMethod("get" + propertyName);
-                            comboBox.setSelectedItem(getPropertyMethod.invoke(relatedEntity));
+                            if (result.isPresent()) {
+                                Object relatedEntity = result.get();
+                                Method getPropertyMethod = relatedEntity.getClass().getMethod("get" + propertyName);
+                                comboBox.setSelectedItem(getPropertyMethod.invoke(relatedEntity));
+                            }
                         }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                    comp = comboBox;
 
-                comp = comboBox;
+                } else if (v.equals("JDateChooser")) {
+                    comp = new JDateChooser();
+                    comp.setFont(new Font("Calibri", Font.BOLD, 25));
 
-            } else if (v.equals("JDateChooser")) {
-                comp = new JDateChooser();
-                comp.setFont(new Font("Calibri", Font.BOLD, 25));
+                    JDateChooser dateJ = (JDateChooser) comp;
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-                JDateChooser dateJ = (JDateChooser) comp;
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-                try {
-                    Method getDateMethod = selectedUpdate.getClass().getMethod("get" + k);
-                    Object result = getDateMethod.invoke(selectedUpdate);
-                    if (result != null) {
-                        Date dateS = simpleDateFormat.parse(result.toString());
-                        dateJ.setDate(dateS);
+                    try {
+                        Method getDateMethod = selectedUpdate.getClass().getMethod("get" + k);
+                        Object result = getDateMethod.invoke(selectedUpdate);
+                        if (result != null) {
+                            Date dateS = simpleDateFormat.parse(result.toString());
+                            dateJ.setDate(dateS);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
-            } else {
-                comp = new JTextField();
-                comp.setFont(new Font("Calibri", Font.BOLD, 25));
-                JTextField textField = (JTextField) comp;
+                } else {
+                    comp = new JTextField();
+                    comp.setFont(new Font("Calibri", Font.BOLD, 25));
+                    JTextField textField = (JTextField) comp;
 
-                try {
-                    Method getText = selectedUpdate.getClass().getMethod("get" + k);
-                    Object result = getText.invoke(selectedUpdate);
-                    System.out.println(result);
-                    if (result != null) {
-                        textField.setText(result.toString());
-                    } else {
-                        textField.setText("");
+                    try {
+                        Method getText = selectedUpdate.getClass().getMethod("get" + k);
+                        Object result = getText.invoke(selectedUpdate);
+                        System.out.println(result);
+                        if (result != null) {
+                            textField.setText(result.toString());
+                        } else {
+                            textField.setText("");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+
                 }
 
+                contentPanel.add(comp);
+                components.add(comp);
             }
-
-            contentPanel.add(comp);
-            components.add(comp);
         });
 
         contentPanel.add(backButton);
@@ -234,40 +235,43 @@ public class UpdateController extends JFrame implements ActionListener {
     public void updateEntity() {
         int index = 0;
         for (String propertyName : types.keySet()) {
-            try {
-                String type = types.get(propertyName);
-                Component comp = components.get(index);
-                Object value = null;
+            if (!Objects.equals(propertyName, "Id") && !Objects.equals(propertyName, "CreatedAt") && !Objects.equals(propertyName, "UpdatedAt")) {
+                try {
+                    String type = types.get(propertyName);
+                    Component comp = components.get(index);
+                    Object value = null;
 
-                if (type.equals("JComboBox")) {
-                    JComboBox<?> comboBox = (JComboBox<?>) comp;
-                    Object selectedItem = comboBox.getSelectedItem();
-                    Method findMethod = findService.getClass().getMethod("find", String.class);
-                    Optional<?> result = (Optional<?>) findMethod.invoke(findService, selectedItem);
+                    if (type.equals("JComboBox")) {
+                        JComboBox<?> comboBox = (JComboBox<?>) comp;
+                        Object selectedItem = comboBox.getSelectedItem();
+                        Method findMethod = findService.getClass().getMethod("find", String.class);
+                        Optional<?> result = (Optional<?>) findMethod.invoke(findService, selectedItem);
 
-                    if (result.isPresent()) {
-                        Object relatedEntity = result.get();
-                        Method getIdMethod = relatedEntity.getClass().getMethod("getId");
-                        value = getIdMethod.invoke(relatedEntity);
-                    } else {
-                        throw new SQLException("Related entity not found for " + selectedItem.toString());
+                        if (result.isPresent()) {
+                            Object relatedEntity = result.get();
+                            Method getIdMethod = relatedEntity.getClass().getMethod("getId");
+                            value = getIdMethod.invoke(relatedEntity);
+                        } else {
+                            throw new SQLException("Related entity not found for " + selectedItem.toString());
+                        }
+                    } else if (type.equals("JDateChooser")) {
+                        JDateChooser dateJ = (JDateChooser) comp;
+                        value = dateJ.getDate();
+                    } else if (type.equals("TextField")) {
+                        JTextField textField = (JTextField) comp;
+                        value = textField.getText();
                     }
-                } else if (type.equals("JDateChooser")) {
-                    JDateChooser dateJ = (JDateChooser) comp;
-                    value = dateJ.getDate();
-                } else if (type.equals("TextField")) {
-                    JTextField textField = (JTextField) comp;
-                    value = textField.getText();
+
+                    PropertyDescriptor pd = new PropertyDescriptor(propertyName, entity.getClass());
+                    Method setter = pd.getWriteMethod();
+                    setter.invoke(entity, value);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
-                PropertyDescriptor pd = new PropertyDescriptor(propertyName, entity.getClass());
-                Method setter = pd.getWriteMethod();
-                setter.invoke(entity, value);
-
-            } catch (Exception e) {
-                e.printStackTrace();
+                index++;
             }
-            index++;
         }
 
         try {

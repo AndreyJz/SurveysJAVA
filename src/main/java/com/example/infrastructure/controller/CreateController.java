@@ -53,25 +53,27 @@ public class CreateController extends JFrame implements ActionListener {
         System.out.println(types);
 
         types.forEach((k, v) -> {
-            JLabel label = new JLabel(k);
-            label.setFont(new Font("Calibri", Font.BOLD, 25));
-            label.setForeground(new Color(236, 224, 220));
-            label.setHorizontalAlignment(SwingConstants.CENTER);
-            contentPanel.add(label);
-            Component comp = null;
-            if (v.equals("JComboBox")) {
-                comp = generateComboBox(entity);
-                comp.setFont(new Font("Calibri", Font.BOLD, 25));
-            } else if (v.equals("JDateChooser")) {
-                comp = new JDateChooser();
-                comp.setFont(new Font("Calibri", Font.BOLD, 25));
-            } else {
-                comp = new TextField();
-                comp.setFont(new Font("Calibri", Font.BOLD, 25));
-            }
+            if (!Objects.equals(k, "Id") && !Objects.equals(k, "CreatedAt") && !Objects.equals(k, "UpdatedAt")) {
+                JLabel label = new JLabel(k);
+                label.setFont(new Font("Calibri", Font.BOLD, 25));
+                label.setForeground(new Color(236, 224, 220));
+                label.setHorizontalAlignment(SwingConstants.CENTER);
+                contentPanel.add(label);
+                Component comp = null;
+                if (v.equals("JComboBox")) {
+                    comp = generateComboBox(entity);
+                    comp.setFont(new Font("Calibri", Font.BOLD, 25));
+                } else if (v.equals("JDateChooser")) {
+                    comp = new JDateChooser();
+                    comp.setFont(new Font("Calibri", Font.BOLD, 25));
+                } else {
+                    comp = new JTextField();
+                    comp.setFont(new Font("Calibri", Font.BOLD, 25));
+                }
 
-            contentPanel.add(comp);
-            components.add(comp);
+                contentPanel.add(comp);
+                components.add(comp);
+            }
         });
 
         contentPanel.add(backButton);
@@ -111,43 +113,45 @@ public class CreateController extends JFrame implements ActionListener {
     private void saveEntity() {
         int index = 0;
         for (String propertyName : types.keySet()) {
-            System.out.println(propertyName);
-            try {
-                String type = types.get(propertyName);
-                Component comp = components.get(index);
-                Object value = null;
+            if (!Objects.equals(propertyName, "Id") && !Objects.equals(propertyName, "CreatedAt") && !Objects.equals(propertyName, "UpdatedAt")) {
+                System.out.println(propertyName);
+                try {
+                    String type = types.get(propertyName);
+                    Component comp = components.get(index);
+                    Object value = null;
 
-                if (type.equals("JComboBox")) {
-                    JComboBox<?> comboBox = (JComboBox<?>) comp;
-                    Object selectedItem = comboBox.getSelectedItem();
-                    // Assuming 'findService' is a service that can find entities by name
-                    Method findMethod = findService.getClass().getMethod("find", String.class);
-                    Optional<?> result = (Optional<?>) findMethod.invoke(findService, selectedItem.toString());
+                    if (type.equals("JComboBox")) {
+                        JComboBox<?> comboBox = (JComboBox<?>) comp;
+                        Object selectedItem = comboBox.getSelectedItem();
 
-                    if (result.isPresent()) {
-                        Object relatedEntity = result.get();
-                        Method getIdMethod = relatedEntity.getClass().getMethod("getId");
-                        value = getIdMethod.invoke(relatedEntity);
-                    } else {
-                        throw new SQLException("Related entity not found for " + selectedItem.toString());
+                        Method findMethod = findService.getClass().getMethod("find", String.class);
+                        Optional<?> result = (Optional<?>) findMethod.invoke(findService, selectedItem.toString());
+
+                        if (result.isPresent()) {
+                            Object relatedEntity = result.get();
+                            Method getIdMethod = relatedEntity.getClass().getMethod("getId");
+                            value = getIdMethod.invoke(relatedEntity);
+                        } else {
+                            throw new SQLException("Related entity not found for " + selectedItem.toString());
+                        }
+
+                    } else if (type.equals("JDateChooser")) {
+                        JDateChooser dateChooser = (JDateChooser) comp;
+                        value = dateChooser.getDate();
+                    } else if (type.equals("TextField")) {
+                        JTextField textField = (JTextField) comp;
+                        value = textField.getText();
                     }
 
-                } else if (type.equals("JDateChooser")) {
-                    JDateChooser dateChooser = (JDateChooser) comp;
-                    value = dateChooser.getDate();
-                } else if (type.equals("TextField")) {
-                    TextField textField = (TextField) comp;
-                    value = textField.getText();
+                    PropertyDescriptor pd = new PropertyDescriptor(propertyName, entity.getClass());
+                    Method setter = pd.getWriteMethod();
+                    setter.invoke(entity, value);
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
-
-                PropertyDescriptor pd = new PropertyDescriptor(propertyName, entity.getClass());
-                Method setter = pd.getWriteMethod();
-                setter.invoke(entity, value);
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
+                index++;
             }
-            index++;
         }
 
         try {
