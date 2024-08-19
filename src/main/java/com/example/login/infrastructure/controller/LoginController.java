@@ -1,5 +1,6 @@
 package com.example.login.infrastructure.controller;
 
+import com.example.infrastructure.controller.AdminForumController;
 import com.example.login.application.LoginCheckUC;
 import com.example.login.application.RoleUC;
 import com.example.login.domain.entity.Login;
@@ -89,7 +90,11 @@ public class LoginController extends JFrame implements ActionListener {
             boolean admin = role.checkRole(logged.get().getId());
 
             if (admin) {
-                System.out.println("yes");
+                setVisible(false);
+                AdminForumController menu = new AdminForumController();
+                menu.setResizable(false);
+                menu.setLocationRelativeTo(null);
+                menu.setVisible(true);
             } else {
                 System.out.println("no");
             }

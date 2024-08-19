@@ -13,16 +13,6 @@ import com.example.survey.infrastructure.repository.SurveyRepository;
 
 public class Main {
     public static void main(String[] args) {
-//        LoginController loginController = new LoginController();
-        ChapterService cs = new ChapterRepository();
-        SurveySercive ss = new SurveyRepository();
-        UpdateChapterUC uc = new UpdateChapterUC(cs);
-        ListChaptersUC lc = new ListChaptersUC(cs);
-        ListSurveysUC ls = new ListSurveysUC(ss);
-        FindChapterByNameUC fc = new FindChapterByNameUC(cs);
-        FindSurveyByIdUC fsi = new FindSurveyByIdUC(ss);
-        FindSurveyByNameUC fs = new FindSurveyByNameUC(ss);
-        ChapterController c = new ChapterController(uc, lc, ls, fc, fsi, fs);
-        c.updateChapter();
+        LoginController loginController = new LoginController();
     }
 }

@@ -219,9 +219,8 @@ public class UpdateController extends JFrame implements ActionListener {
             dispose();
         } else if (e.getSource() == updatedButton) {
             mainPanel.setVisible(false);
+            String selected = (String) selectComboBox.getSelectedItem();
             try {
-                String selected = (String) selectComboBox.getSelectedItem();
-
                 Method filterMethod = findServiceEntity.getClass().getMethod("find", String.class);
                 selectedUpdate = (Optional<?>) filterMethod.invoke(findServiceEntity, selected);
             } catch (Exception ex) {
@@ -282,6 +281,8 @@ public class UpdateController extends JFrame implements ActionListener {
             Method updateMethod = updateService.getClass().getMethod("update", entity.getClass());
             updateMethod.invoke(updateService, entity);
             System.out.println("Entity updated: " + entity);
+
+            dispose();
         } catch (Exception e) {
             e.printStackTrace();
         }
