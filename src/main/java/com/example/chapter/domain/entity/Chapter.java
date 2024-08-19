@@ -2,15 +2,16 @@ package com.example.chapter.domain.entity;
 
 import com.example.domain.service.GlobalService;
 
-import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Chapter implements GlobalService {
     private int id;
-    private Date createdAt;
-    private Date updatedAt;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
     private String chapterNumber;
     private String chapterTitle;
     private int surveyId;
@@ -18,7 +19,7 @@ public class Chapter implements GlobalService {
     public Chapter() {
     }
 
-    public Chapter(int id, Date createdAt, Date updatedAt, String chapterNumber, String chapterTitle, int surveyId) {
+    public Chapter(int id, Timestamp createdAt, Timestamp updatedAt, String chapterNumber, String chapterTitle, int surveyId) {
         this.id = id;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -35,19 +36,19 @@ public class Chapter implements GlobalService {
         this.id = id;
     }
 
-    public Date getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt() {
+    public Timestamp getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -78,11 +79,11 @@ public class Chapter implements GlobalService {
     @Override
     public Map<String, String> getTypes() {
         Map<String, String> lista = new LinkedHashMap<>();
-//        lista.put("createdAt", "JDateChooser");
-//        lista.put("updatedAt", "JDateChooser");
-        lista.put("chapterNumber", "TextField");
-        lista.put("chapterTitle", "TextField");
-        lista.put("surveyId", "JComboBox");
+//        lista.put("CreatedAt", "TextField");
+//        lista.put("UpdatedAt", "TextField");
+        lista.put("ChapterNumber", "TextField");
+        lista.put("ChapterTitle", "TextField");
+        lista.put("SurveyId", "JComboBox");
         return lista;
     }
 }

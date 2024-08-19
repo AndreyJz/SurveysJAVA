@@ -74,8 +74,8 @@ public class CreateController extends JFrame implements ActionListener {
             components.add(comp);
         });
 
-        contentPanel.add(createButton);
         contentPanel.add(backButton);
+        contentPanel.add(createButton);
         add(contentPanel);
 
         setVisible(true);
@@ -157,8 +157,5 @@ public class CreateController extends JFrame implements ActionListener {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
     }
-
-
 }

@@ -44,7 +44,7 @@ public class ChapterRepository implements ChapterService {
 
     @Override
     public void updateChapter(Chapter chapter) {
-        String query = "UPDATE chapter SET updated_at = NOW, chapter_number = ?, chapter_title = ?, survey_id = ? WHERE id = ?";
+        String query = "UPDATE chapter SET updated_at = NOW(), chapter_number = ?, chapter_title = ?, survey_id = ? WHERE id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, chapter.getChapterNumber());
@@ -83,8 +83,8 @@ public class ChapterRepository implements ChapterService {
             if (rs.next()) {
                 Chapter chapter = new Chapter();
                 chapter.setId(rs.getInt("id"));
-                chapter.setCreatedAt(rs.getDate("created_at"));
-                chapter.setUpdatedAt(rs.getDate("updated_at"));
+                chapter.setCreatedAt(rs.getTimestamp("created_at"));
+                chapter.setUpdatedAt(rs.getTimestamp("updated_at"));
                 chapter.setChapterNumber(rs.getString("chapter_number"));
                 chapter.setChapterTitle(rs.getString("chapter_title"));
                 chapter.setSurveyId(rs.getInt("survey_id"));
@@ -107,8 +107,8 @@ public class ChapterRepository implements ChapterService {
                 while (rs.next()) {
                     Chapter chapter = new Chapter();
                     chapter.setId(rs.getInt("id"));
-                    chapter.setCreatedAt(rs.getDate("created_at"));
-                    chapter.setUpdatedAt(rs.getDate("updated_at"));
+                    chapter.setCreatedAt(rs.getTimestamp("created_at"));
+                    chapter.setUpdatedAt(rs.getTimestamp("updated_at"));
                     chapter.setChapterNumber(rs.getString("chapter_number"));
                     chapter.setChapterTitle(rs.getString("chapter_title"));
                     chapter.setSurveyId(rs.getInt("survey_id"));
@@ -131,8 +131,8 @@ public class ChapterRepository implements ChapterService {
             if (rs.next()) {
                 Chapter chapter = new Chapter();
                 chapter.setId(rs.getInt("id"));
-                chapter.setCreatedAt(rs.getDate("created_at"));
-                chapter.setUpdatedAt(rs.getDate("updated_at"));
+                chapter.setCreatedAt(rs.getTimestamp("created_at"));
+                chapter.setUpdatedAt(rs.getTimestamp("updated_at"));
                 chapter.setChapterNumber(rs.getString("chapter_number"));
                 chapter.setChapterTitle(rs.getString("chapter_title"));
                 chapter.setSurveyId(rs.getInt("survey_id"));
