@@ -48,7 +48,7 @@ public class DeleteController extends JFrame implements ActionListener {
 
         selectComboBox = generateComboBox(listServiceEntity);
 
-        deleteButton = new JButton("Next ->");
+        deleteButton = new JButton("Delete ->");
         deleteButton.addActionListener(this);
         backButton = new JButton("<- Go Back");
         backButton.addActionListener(this);

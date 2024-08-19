@@ -4,6 +4,7 @@ import com.example.chapter.application.*;
 import com.example.chapter.domain.entity.Chapter;
 import com.example.infrastructure.controller.CreateController;
 import com.example.infrastructure.controller.DeleteController;
+import com.example.infrastructure.controller.ListController;
 import com.example.infrastructure.controller.UpdateController;
 import com.example.survey.application.FindSurveyByIdUC;
 import com.example.survey.application.FindSurveyByNameUC;
@@ -13,6 +14,7 @@ public class ChapterController {
     private CreateController createController;
     private UpdateController updateController;
     private DeleteController deleteController;
+    private ListController listController;
     private FindSurveyByIdUC findSurveyByIdUC;
     private FindSurveyByNameUC findSurveyByNameUC;
     private FindChapterByNameUC findChapterByNameUC;
@@ -43,6 +45,10 @@ public class ChapterController {
         this.findChapterByNameUC = findChapterByNameUC;
     }
 
+    public ChapterController(ListChaptersUC listChaptersUC) {
+        this.listChaptersUC = listChaptersUC;
+    }
+
     public void createChapter() {
         Chapter chapter = new Chapter();
         this.createController = new CreateController(chapter, createChapterUC, listSurveysUC, findSurveyByNameUC);
@@ -56,6 +62,11 @@ public class ChapterController {
     public void deleteChapter() {
         Chapter chapter = new Chapter();
         this.deleteController = new DeleteController(chapter, deleteChapterUC, listChaptersUC, findChapterByNameUC);
+    }
+
+    public void listChapters() {
+        Chapter chapter = new Chapter();
+        this.listController = new ListController(chapter,listChaptersUC);
     }
 
 }
