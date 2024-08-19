@@ -25,11 +25,9 @@ public class CreateController extends JFrame implements ActionListener {
     private Map<String, String> types;
     private List<Component> components = new ArrayList<>();
 
-    public CreateController(GlobalService entity, Object createService, Object listService, Object findService) {
+    public CreateController(GlobalService entity, Object createService, Map<String, List<Object>> mapOfList) {
         this.entity = entity;
         this.createService = createService;
-        this.listService = listService;
-        this.findService = findService;
 
         setTitle("Create " + entity.getClass().getSimpleName());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -61,6 +59,12 @@ public class CreateController extends JFrame implements ActionListener {
                 contentPanel.add(label);
                 Component comp = null;
                 if (v.equals("JComboBox")) {
+                    mapOfList.forEach((key,val) -> {
+                        if (k.contains(key)) {
+                            this.listService = val.get(0);
+                            this.findService = val.get(1);
+                        }
+                    });
                     comp = generateComboBox(entity);
                     comp.setFont(new Font("Calibri", Font.BOLD, 25));
                 } else if (v.equals("JDateChooser")) {

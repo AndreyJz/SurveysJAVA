@@ -12,12 +12,12 @@ public class QuestionController {
     private ListQuestionsUC listQuestionsUC;
     private FindQuestionByNameUC findQuestionByNameUC;
 
-    public void QuestionController(CreateQuestionUC createQuestionUC, ListQuestionsUC listQuestionsUC, FindQuestionByNameUC findQuestionByNameUC) {
-        this.createQuestionUC = createQuestionUC;
-        this.listQuestionsUC = listQuestionsUC;
-        this.findQuestionByNameUC = findQuestionByNameUC;
-        Question question = new Question();
-
-        this.createController = new CreateController(question, createQuestionUC, listQuestionsUC, findQuestionByNameUC);
-    }
+//    public void QuestionController(CreateQuestionUC createQuestionUC, ListQuestionsUC listQuestionsUC, FindQuestionByNameUC findQuestionByNameUC) {
+//        this.createQuestionUC = createQuestionUC;
+//        this.listQuestionsUC = listQuestionsUC;
+//        this.findQuestionByNameUC = findQuestionByNameUC;
+//        Question question = new Question();
+//
+//        this.createController = new CreateController(question, createQuestionUC, listQuestionsUC, findQuestionByNameUC);
+//    }
 }

@@ -7,6 +7,8 @@ import com.example.survey.application.FindSurveyByIdUC;
 import com.example.survey.application.FindSurveyByNameUC;
 import com.example.survey.application.ListSurveysUC;
 
+import java.util.*;
+
 public class ChapterController {
     private CreateController createController;
     private UpdateController updateController;
@@ -54,7 +56,13 @@ public class ChapterController {
 
     public void createChapter() {
         Chapter chapter = new Chapter();
-        this.createController = new CreateController(chapter, createChapterUC, listSurveysUC, findSurveyByNameUC);
+        List<Object> listOfSurvey = Arrays.asList(listSurveysUC,findSurveyByNameUC);
+        List<Object> listOfChapters = Arrays.asList(listChaptersUC,findChapterByNameUC);
+        Map<String, List<Object>> mapOfList = new LinkedHashMap<>();
+
+        mapOfList.put("Survey", listOfSurvey);
+        mapOfList.put("Chapter", listOfChapters);
+        this.createController = new CreateController(chapter, createChapterUC, mapOfList);
     }
 
     public void updateChapter() {
