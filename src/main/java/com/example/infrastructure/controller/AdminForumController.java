@@ -1,5 +1,6 @@
 package com.example.infrastructure.controller;
 
+import com.example.categoriescatalog.application.CreateCategoriesCatalogUC;
 import com.example.chapter.application.*;
 import com.example.chapter.domain.service.ChapterService;
 import com.example.chapter.infrastructure.controller.ChapterController;
@@ -15,6 +16,10 @@ import com.example.survey.application.FindSurveyByNameUC;
 import com.example.survey.application.ListSurveysUC;
 import com.example.survey.domain.service.SurveySercive;
 import com.example.survey.infrastructure.repository.SurveyRepository;
+import com.example.categoriescatalog.application.*;
+import com.example.categoriescatalog.domain.service.CategoriesCatalogService;
+import com.example.categoriescatalog.infrastructure.controller.CategoriesCatalogController;
+import com.example.categoriescatalog.infrastructure.reporsitory.CategoriesCatalogRepository;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,14 +72,14 @@ public class AdminForumController extends JFrame implements ActionListener {
     }
 
     private void initializeMainPanel() {
-        String[] mainOptions = {"Survey", "Chapter", "Question", "Laboratory", "Customer", "ModeAdministration", "ActivePrinciple", "UnitMeasurement", "Farmacy", "Medicine", "Farmacy-Medicine"};
+        String[] mainOptions = {"Survey", "Chapter", "Question", "CategoriesCatalog", "Customer", "ModeAdministration", "ActivePrinciple", "UnitMeasurement", "Farmacy", "Medicine", "Farmacy-Medicine"};
         for (String option : mainOptions) {
             addButton(mainMenuPanel, option, this);
         }
     }
 
     private void initializeSubPanels() {
-        String[] entities = {"Survey", "Chapter", "Question", "Laboratory", "Customer", "ModeAdministration", "ActivePrinciple", "UnitMeasurement", "Farmacy", "Medicine", "Farmacy-Medicine"};
+        String[] entities = {"Survey", "Chapter", "Question", "CategoriesCatalog", "Customer", "ModeAdministration", "ActivePrinciple", "UnitMeasurement", "Farmacy", "Medicine", "Farmacy-Medicine"};
         for (String entity : entities) {
             JPanel panel = new JPanel(new GridLayout(6, 1, 10, 10));
             addEntityButtons(panel, entity);
@@ -114,7 +119,7 @@ public class AdminForumController extends JFrame implements ActionListener {
             icon = new ImageIcon(new ImageIcon("src/main/resources/images/71-716950_the-night-sky-of-the-city-night-city.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
         } else if (text.contains("Question")) {
             icon = new ImageIcon(new ImageIcon("src/main/resources/images/3056109.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
-        } else if (text.contains("Laboratory")) {
+        } else if (text.contains("CategoriesCatalog")) {
             icon = new ImageIcon(new ImageIcon("src/main/resources/images/clinical-laboratory.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
         } else if (text.contains("Customer")) {
             icon = new ImageIcon(new ImageIcon("src/main/resources/images/381-3811230_client-people-business-customer-person-client-png-clipart.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
@@ -171,9 +176,9 @@ public class AdminForumController extends JFrame implements ActionListener {
     QuestionService qs = new QuestionRepository();
     ChapterService cs = new ChapterRepository();
     SurveySercive ss = new SurveyRepository();
+    CategoriesCatalogService ccs = new CategoriesCatalogRepository();
 //    UnitMeasurementService us = new UnitMeasurementRepository();
 //    ActivePrincipleService as = new ActivePrincipleRepository();
-//    LaboratoryService ls = new LaboratoryRepository();
 //    ModeadministrationService ms = new ModeAdministrationRepository();
 //    FarmacyService fs = new FarmacyRepository();
 //    CustomerService ccss = new CustomerRepository();
@@ -197,12 +202,14 @@ public class AdminForumController extends JFrame implements ActionListener {
             ListSurveysUC lc = new ListSurveysUC(ss);
 //            QuestionController c = new QuestionController(uc,fc,lc);
 //            c.createQuestion();
-        } else if (entity.equals("Laboratory")) {
-//            CreateLaboratoryUC cl = new CreateLaboratoryUC(ls);
+        } else if (entity.equals("CategoriesCatalog")) {
+            CreateCategoriesCatalogUC ccat = new CreateCategoriesCatalogUC(ccs);
+            CategoriesCatalogController ccc = new CategoriesCatalogController(ccat);
+//            CreateCategoriesCatalogUC cl = new CreateCategoriesCatalogUC(ls);
 //            FindCitiesUC fc = new FindCitiesUC(cs);
 //            FindChapterByNameUC fcn = new FindChapterByNameUC(cs);
-//            LaboratoryController lc = new LaboratoryController(cl, fc, fcn);
-//            lc.createLaboratory();
+//            CategoriesCatalogController lc = new CategoriesCatalogController(cl, fc, fcn);
+//            lc.createCategoriesCatalog();
         } else if (entity.equals("Customer")) {
 //            CreateCustomerUC cc = new CreateCustomerUC(ccss);
 //            FindCitiesUC fc = new FindCitiesUC(cs);
