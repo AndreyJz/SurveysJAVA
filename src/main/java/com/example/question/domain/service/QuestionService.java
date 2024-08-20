@@ -12,4 +12,5 @@ public interface QuestionService {
     public Optional<Question> findQuestionById(int id);
     public List<Question> listQuestions();
     public Optional<Question> findQuestionsByName(String name);
+    public List<Question> listQuestionsByChapterId(int id);
 }

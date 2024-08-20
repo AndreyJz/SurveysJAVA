@@ -153,4 +153,31 @@ public class QuestionRepository implements QuestionService {
         }
         return Optional.empty();
     }
+
+    @Override
+    public List<Question> listQuestionsByChapterId(int id) {
+        String query = "SELECT * FROM question WHERE chapter_id = ?";
+        List<Question> questions = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Question question = new Question();
+                    question.setId(rs.getInt("id"));
+                    question.setCreatedAt(rs.getDate("created_at"));
+                    question.setUpdatedAt(rs.getDate("updated_at"));
+                    question.setQuestionNumber(rs.getString("question_number"));
+                    question.setResponseType(rs.getString("response_type"));
+                    question.setCommentQuestion(rs.getString("comment_question"));
+                    question.setQuestionText(rs.getString("question_text"));
+                    question.setChapterId(rs.getInt("chapter_id"));
+                    questions.add(question);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return questions;
+    }
 }

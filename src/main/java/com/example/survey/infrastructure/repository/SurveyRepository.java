@@ -4,10 +4,7 @@ import com.example.survey.domain.entity.Survey;
 import com.example.survey.domain.service.SurveySercive;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 
 public class SurveyRepository implements SurveySercive {
     private Connection connection;

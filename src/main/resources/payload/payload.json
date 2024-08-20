@@ -1,0 +1,126 @@
+{
+  "survey": {
+    "id": 1,
+    "name": "Basketball Survey",
+    "description": "A survey about basketball preferences",
+    "chapters": [
+      {
+        "chapter_number": "1",
+        "chapter_title": "Favorite Teams",
+        "questions": [
+          {
+            "question_number": "1",
+            "response_type": "radio",
+            "question_text": "What is your favorite basketball team?",
+            "comment_question": "Choose your favorite team.",
+            "options": [
+              {
+                "value": 1,
+                "text": "Los Angeles Lakers",
+                "comment_response": "Choose Lakers",
+                "subresponses": [
+                  {
+                    "subresponse_number": 1,
+                    "text": "1980s Era",
+                    "response_question": "Why do you prefer the 1980s Era?"
+                  },
+                  {
+                    "subresponse_number": 2,
+                    "text": "2000s Era"
+                  }
+                ],
+                "response_question": "Why did you choose the Lakers?"
+              },
+              {
+                "value": 2,
+                "text": "Golden State Warriors",
+                "comment_response": "Choose Warriors"
+              },
+              {
+                "value": 3,
+                "text": "Chicago Bulls",
+                "comment_response": "Choose Bulls"
+              }
+            ]
+          },
+          {
+            "question_number": "2",
+            "response_type": "text",
+            "question_text": "Why do you support this team?",
+            "comment_question": "Explain why you like this team."
+          }
+        ]
+      },
+      {
+        "chapter_number": "2",
+        "chapter_title": "Favorite Players",
+        "questions": [
+          {
+            "question_number": "1",
+            "response_type": "radio",
+            "question_text": "Who is your favorite basketball player?",
+            "comment_question": "Choose your favorite player.",
+            "options": [
+              {
+                "value": 1,
+                "text": "LeBron James",
+                "comment_response": "Choose LeBron James"
+              },
+              {
+                "value": 2,
+                "text": "Michael Jordan",
+                "comment_response": "Choose Michael Jordan"
+              },
+              {
+                "value": 3,
+                "text": "Stephen Curry",
+                "comment_response": "Choose Stephen Curry"
+              }
+            ]
+          },
+          {
+            "question_number": "2",
+            "response_type": "text",
+            "question_text": "Why do you support this player?",
+            "comment_question": "Explain why you like this player."
+          }
+        ]
+      },
+      {
+        "chapter_number": "3",
+        "chapter_title": "Basketball Experience",
+        "questions": [
+          {
+            "question_number": "1",
+            "response_type": "radio",
+            "question_text": "What position do you play in basketball?",
+            "comment_question": "Choose your playing position.",
+            "options": [
+              {
+                "value": 1,
+                "text": "Point Guard",
+                "comment_response": "Choose Point Guard"
+              },
+              {
+                "value": 2,
+                "text": "Shooting Guard",
+                "comment_response": "Choose Shooting Guard"
+              },
+              {
+                "value": 3,
+                "text": "Center",
+                "comment_response": "Choose Center"
+              }
+            ]
+          },
+          {
+            "question_number": "2",
+            "response_type": "text",
+            "question_text": "How long have you been playing basketball?",
+            "comment_question": "Describe your experience with basketball."
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -143,4 +143,30 @@ public class ChapterRepository implements ChapterService {
         }
         return Optional.empty();
     }
+
+    @Override
+    public List<Chapter> listChaptersBySurveyID(int id) {
+        String query = "SELECT * FROM chapter WHERE survey_id = ?";
+        List<Chapter> chapters = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Chapter chapter = new Chapter();
+                    chapter.setId(rs.getInt("id"));
+                    chapter.setCreatedAt(rs.getTimestamp("created_at"));
+                    chapter.setUpdatedAt(rs.getTimestamp("updated_at"));
+                    chapter.setChapterNumber(rs.getString("chapter_number"));
+                    chapter.setChapterTitle(rs.getString("chapter_title"));
+                    chapter.setSurveyId(rs.getInt("survey_id"));
+                    chapters.add(chapter);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return chapters;
+    }
 }

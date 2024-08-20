@@ -12,4 +12,5 @@ public interface ChapterService {
     public Optional<Chapter> findChapterById(int id);
     public List<Chapter> listChapters();
     public Optional<Chapter> findChaptersByName(String name);
+    public List<Chapter> listChaptersBySurveyID(int id);
 }

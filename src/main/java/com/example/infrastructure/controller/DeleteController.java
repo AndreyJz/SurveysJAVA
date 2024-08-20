@@ -29,7 +29,7 @@ public class DeleteController extends JFrame implements ActionListener {
         this.listServiceEntity = listServiceEntity;
         this.findServiceEntity = findServiceEntity;
 
-        setTitle("Update " + entity.getClass().getSimpleName());
+        setTitle("Delete " + entity.getClass().getSimpleName());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setBackground(new Color(0x123456));
         setSize(500, 700);
