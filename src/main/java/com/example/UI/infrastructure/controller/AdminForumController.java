@@ -1,14 +1,24 @@
 package com.example.UI.infrastructure.controller;
 
 import com.example.modules.categoriescatalog.application.CreateCategoriesCatalogUC;
+import com.example.modules.categoriescatalog.application.FindCategoriesCatalogByNameUC;
+import com.example.modules.categoriescatalog.application.ListCategoriesCatalogsUC;
 import com.example.modules.chapter.application.*;
 import com.example.modules.chapter.domain.service.ChapterService;
 import com.example.modules.chapter.infrastructure.controller.ChapterController;
 import com.example.modules.chapter.infrastructure.repository.ChapterRepository;
 import com.example.modules.question.application.CreateQuestionUC;
+import com.example.modules.question.application.FindQuestionByNameUC;
 import com.example.modules.question.application.ListQuestionsUC;
 import com.example.modules.question.domain.service.QuestionService;
+import com.example.modules.question.infrastructure.controller.QuestionController;
 import com.example.modules.question.infrastructure.repository.QuestionRepository;
+import com.example.modules.responseoptions.application.CreateResponseOptionsUC;
+import com.example.modules.responseoptions.application.FindResponseOptionsByNameUC;
+import com.example.modules.responseoptions.application.ListResponseOptionsUC;
+import com.example.modules.responseoptions.domain.service.ResponseOptionsService;
+import com.example.modules.responseoptions.infrastructure.controller.ResponseOptionsController;
+import com.example.modules.responseoptions.infrastructure.repository.ResponseOptionsRepository;
 import com.example.modules.survey.application.FindSurveyByIdUC;
 import com.example.modules.survey.application.FindSurveyByNameUC;
 import com.example.modules.survey.application.ListSurveysUC;
@@ -69,14 +79,14 @@ public class AdminForumController extends JFrame implements ActionListener {
     }
 
     private void initializeMainPanel() {
-        String[] mainOptions = {"Survey", "Chapter", "Question", "CategoriesCatalog", "Customer", "ModeAdministration", "ActivePrinciple", "UnitMeasurement", "Farmacy", "Medicine", "Farmacy-Medicine"};
+        String[] mainOptions = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "ModeAdministration", "ActivePrinciple", "UnitMeasurement", "Farmacy", "Medicine", "Farmacy-Medicine"};
         for (String option : mainOptions) {
             addButton(mainMenuPanel, option, this);
         }
     }
 
     private void initializeSubPanels() {
-        String[] entities = {"Survey", "Chapter", "Question", "CategoriesCatalog", "Customer", "ModeAdministration", "ActivePrinciple", "UnitMeasurement", "Farmacy", "Medicine", "Farmacy-Medicine"};
+        String[] entities = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "ModeAdministration", "ActivePrinciple", "UnitMeasurement", "Farmacy", "Medicine", "Farmacy-Medicine"};
         for (String entity : entities) {
             JPanel panel = new JPanel(new GridLayout(6, 1, 10, 10));
             addEntityButtons(panel, entity);
@@ -118,7 +128,7 @@ public class AdminForumController extends JFrame implements ActionListener {
             icon = new ImageIcon(new ImageIcon("src/main/resources/images/3056109.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
         } else if (text.contains("CategoriesCatalog")) {
             icon = new ImageIcon(new ImageIcon("src/main/resources/images/clinical-laboratory.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
-        } else if (text.contains("Customer")) {
+        } else if (text.contains("ResponseOptions")) {
             icon = new ImageIcon(new ImageIcon("src/main/resources/images/381-3811230_client-people-business-customer-person-client-png-clipart.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
         } else if (text.contains("ModeAdministration")) {
             icon = new ImageIcon(new ImageIcon("src/main/resources/images/pngtree-capsule-and-pills-icon-picture-image_7988303.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
@@ -174,11 +184,12 @@ public class AdminForumController extends JFrame implements ActionListener {
     ChapterService cs = new ChapterRepository();
     SurveySercive ss = new SurveyRepository();
     CategoriesCatalogService ccs = new CategoriesCatalogRepository();
+    ResponseOptionsService rs = new ResponseOptionsRepository();
 //    UnitMeasurementService us = new UnitMeasurementRepository();
 //    ActivePrincipleService as = new ActivePrincipleRepository();
 //    ModeadministrationService ms = new ModeAdministrationRepository();
 //    FarmacyService fs = new FarmacyRepository();
-//    CustomerService ccss = new CustomerRepository();
+//    ResponseOptionsService ccss = new ResponseOptionsRepository();
 //    MedicineService mss = new MedicineRepository();
 //    FarmacyMedicineService fms = new FarmacyMedicineRepository();
 
@@ -194,11 +205,11 @@ public class AdminForumController extends JFrame implements ActionListener {
             ChapterController ccc = new ChapterController(cc,ls,fsn);
             ccc.createChapter();
         } else if (entity.equals("Question")) {
-            CreateQuestionUC uc = new CreateQuestionUC(qs);
-            FindSurveyByNameUC fc = new FindSurveyByNameUC(ss);
-            ListSurveysUC lc = new ListSurveysUC(ss);
-//            QuestionController c = new QuestionController(uc,fc,lc);
-//            c.createQuestion();
+            CreateQuestionUC uq = new CreateQuestionUC(qs);
+            ListChaptersUC lc = new ListChaptersUC(cs);
+            FindChapterByNameUC fc = new FindChapterByNameUC(cs);
+            QuestionController c = new QuestionController(uq,lc,fc);
+            c.createQuestion();
         } else if (entity.equals("CategoriesCatalog")) {
             CreateCategoriesCatalogUC ccat = new CreateCategoriesCatalogUC(ccs);
             CategoriesCatalogController ccc = new CategoriesCatalogController(ccat);
@@ -208,12 +219,16 @@ public class AdminForumController extends JFrame implements ActionListener {
 //            FindChapterByNameUC fcn = new FindChapterByNameUC(cs);
 //            CategoriesCatalogController lc = new CategoriesCatalogController(cl, fc, fcn);
 //            lc.createCategoriesCatalog();
-        } else if (entity.equals("Customer")) {
-//            CreateCustomerUC cc = new CreateCustomerUC(ccss);
-//            FindCitiesUC fc = new FindCitiesUC(cs);
-//            FindChapterByNameUC fcn = new FindChapterByNameUC(cs);
-//            CustomerController c = new CustomerController(cc,fc,fcn);
-//            c.createMedicine();
+        } else if (entity.equals("ResponseOptions")) {
+            CreateResponseOptionsUC cr = new CreateResponseOptionsUC(rs);
+            ListCategoriesCatalogsUC lc = new ListCategoriesCatalogsUC(ccs);
+            FindCategoriesCatalogByNameUC fcn = new FindCategoriesCatalogByNameUC(ccs);
+            ListResponseOptionsUC lr = new ListResponseOptionsUC(rs);
+            FindResponseOptionsByNameUC fr = new FindResponseOptionsByNameUC(rs);
+            ListQuestionsUC lq = new ListQuestionsUC(qs);
+            FindQuestionByNameUC fq = new FindQuestionByNameUC(qs);
+            ResponseOptionsController c = new ResponseOptionsController(cr,lc,fcn,lr,fr,lq,fq);
+            c.createResponseOptions();
         } else if (entity.equals("ModeAdministration")) {
 //            CreateModeadministrationUC cm = new CreateModeadministrationUC(ms);
 //            ModeAdministrationController mc = new ModeAdministrationController(cm);
@@ -273,10 +288,10 @@ public class AdminForumController extends JFrame implements ActionListener {
 //            FindLaboratoriesUC fl = new FindLaboratoriesUC(ls);
 //            LaboratoryController lc = new LaboratoryController(fl);
 //            lc.ListLaboratories();
-        } else if (entity.equals("Customer")) {
-//            ListAllCustomersUC fcsuc = new ListAllCustomersUC(ccss);
-//            CustomerController c = new CustomerController(fcsuc);
-//            c.ListCustomers();
+        } else if (entity.equals("ResponseOptions")) {
+//            ListAllResponseOptionssUC fcsuc = new ListAllResponseOptionssUC(ccss);
+//            ResponseOptionsController c = new ResponseOptionsController(fcsuc);
+//            c.ListResponseOptionss();
         } else if (entity.equals("ModeAdministration")) {
 //            ModeadministrationService ms = new ModeAdministrationRepository();
 //            ListModeadministrationsUC fcsuc = new ListModeadministrationsUC(ms);
@@ -322,10 +337,10 @@ public class AdminForumController extends JFrame implements ActionListener {
 //            FindLaboratoryByIdUC fli = new FindLaboratoryByIdUC(ls);
 //            LaboratoryController lc = new LaboratoryController(fli);
 //            lc.FindLaboratoryByID();
-        } else if (entity.equals("Customer")) {
-//            FindCustomersByIdUC fcuc = new FindCustomersByIdUC(ccss);
-//            CustomerController c = new CustomerController(fcuc);
-//            c.FindCustomerByID();
+        } else if (entity.equals("ResponseOptions")) {
+//            FindResponseOptionssByIdUC fcuc = new FindResponseOptionssByIdUC(ccss);
+//            ResponseOptionsController c = new ResponseOptionsController(fcuc);
+//            c.FindResponseOptionsByID();
         } else if (entity.equals("ModeAdministration")) {
 //            ModeadministrationService ms = new ModeAdministrationRepository();
 //            FindModeadministrationByIdUC fcsuc = new FindModeadministrationByIdUC(ms);
@@ -389,15 +404,15 @@ public class AdminForumController extends JFrame implements ActionListener {
 //            FindChapterByNameUC fcn = new FindChapterByNameUC(cs);
 //            LaboratoryController lc = new LaboratoryController(uc,fl,fln,fc,fcn);
 //            lc.updateLaboratory();
-        } else if (entity.equals("Customer")) {
-//            UpdateCustomerUc cc = new UpdateCustomerUc(ccss);
-//            ListAllCustomersUC lc = new ListAllCustomersUC(ccss);
-//            FindCustomerByNameUC fccn = new FindCustomerByNameUC(ccss);
+        } else if (entity.equals("ResponseOptions")) {
+//            UpdateResponseOptionsUc cc = new UpdateResponseOptionsUc(ccss);
+//            ListAllResponseOptionssUC lc = new ListAllResponseOptionssUC(ccss);
+//            FindResponseOptionsByNameUC fccn = new FindResponseOptionsByNameUC(ccss);
 //            FindCitiesUC fc = new FindCitiesUC(cs);
 //            FindChapterByNameUC fcn = new FindChapterByNameUC(cs);
 //            FindChapterByIdUC fcnd = new FindChapterByIdUC(cs);
-//            CustomerController c = new CustomerController(cc,lc,fccn,fc,fcn,fcnd);
-//            c.updateCustomer();
+//            ResponseOptionsController c = new ResponseOptionsController(cc,lc,fccn,fc,fcn,fcnd);
+//            c.updateResponseOptions();
         } else if (entity.equals("ModeAdministration")) {
 //            ListModeadministrationsUC fcsuc = new ListModeadministrationsUC(ms);
 //            FindModeadministrationByNameUC fciduc = new FindModeadministrationByNameUC(ms);
@@ -480,12 +495,12 @@ public class AdminForumController extends JFrame implements ActionListener {
 //            FindLaboratoryByNameUC fln = new FindLaboratoryByNameUC(ls);
 //            LaboratoryController lc = new LaboratoryController(dl,fl,fln);
 //            lc.deleteLaboratory();
-        } else if (entity.equals("Customer")) {
-//            DeleteCustomerUC dcuc = new DeleteCustomerUC(ccss);
-//            ListAllCustomersUC fcsuc = new ListAllCustomersUC(ccss);
-//            FindCustomerByNameUC fciduc = new FindCustomerByNameUC(ccss);
-//            CustomerController c = new CustomerController(dcuc, fcsuc, fciduc);
-//            c.deleteCustomer();
+        } else if (entity.equals("ResponseOptions")) {
+//            DeleteResponseOptionsUC dcuc = new DeleteResponseOptionsUC(ccss);
+//            ListAllResponseOptionssUC fcsuc = new ListAllResponseOptionssUC(ccss);
+//            FindResponseOptionsByNameUC fciduc = new FindResponseOptionsByNameUC(ccss);
+//            ResponseOptionsController c = new ResponseOptionsController(dcuc, fcsuc, fciduc);
+//            c.deleteResponseOptions();
         } else if (entity.equals("ModeAdministration")) {
 //            ModeadministrationService ms = new ModeAdministrationRepository();
 //            ListModeadministrationsUC fcsuc = new ListModeadministrationsUC(ms);

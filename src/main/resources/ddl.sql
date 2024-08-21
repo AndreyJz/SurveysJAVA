@@ -130,3 +130,109 @@ INSERT INTO users (enabled, username, password) VALUES (true, 'jholver', 'thekil
 INSERT INTO users (enabled, username, password) VALUES (true, 'andrey', '070905123');
 INSERT INTO users_roles (role_id, user_id) VALUES (1,1);
 INSERT INTO users_roles (role_id, user_id) VALUES (2,2);
+
+-- Insert the basketball survey
+INSERT INTO surveys (created_at, updated_at, description, name)
+VALUES (NOW(), NOW(), 'A survey about basketball preferences', 'Basketball Survey');
+
+-- Get the survey ID
+SET @survey_id = LAST_INSERT_ID();
+
+-- Insert Chapter 1
+INSERT INTO chapter (created_at, updated_at, chapter_number, chapter_title, survey_id)
+VALUES (NOW(), NOW(), '1', 'Favorite Teams', @survey_id);
+
+-- Get Chapter 1 ID
+SET @chapter1_id = LAST_INSERT_ID();
+
+-- Insert Chapter 2
+INSERT INTO chapter (created_at, updated_at, chapter_number, chapter_title, survey_id)
+VALUES (NOW(), NOW(), '2', 'Favorite Players', @survey_id);
+
+-- Get Chapter 2 ID
+SET @chapter2_id = LAST_INSERT_ID();
+
+-- Insert Chapter 3
+INSERT INTO chapter (created_at, updated_at, chapter_number, chapter_title, survey_id)
+VALUES (NOW(), NOW(), '3', 'Basketball Experience', @survey_id);
+
+-- Get Chapter 3 ID
+SET @chapter3_id = LAST_INSERT_ID();
+
+-- Insert questions for Chapter 1
+INSERT INTO questions (created_at, updated_at, question_number, response_type, comment_question, question_text, chapter_id)
+VALUES (NOW(), NOW(), '1', 'radio', 'Choose your favorite team.', 'What is your favorite basketball team?', @chapter1_id);
+
+INSERT INTO questions (created_at, updated_at, question_number, response_type, comment_question, question_text, chapter_id)
+VALUES (NOW(), NOW(), '2', 'text', 'Explain why you like this team.', 'Why do you support this team?', @chapter1_id);
+
+-- Insert questions for Chapter 2
+INSERT INTO questions (created_at, updated_at, question_number, response_type, comment_question, question_text, chapter_id)
+VALUES (NOW(), NOW(), '1', 'radio', 'Choose your favorite player.', 'Who is your favorite basketball player?', @chapter2_id);
+
+INSERT INTO questions (created_at, updated_at, question_number, response_type, comment_question, question_text, chapter_id)
+VALUES (NOW(), NOW(), '2', 'text', 'Explain why you like this player.', 'Why do you support this player?', @chapter2_id);
+
+-- Insert questions for Chapter 3
+INSERT INTO questions (created_at, updated_at, question_number, response_type, comment_question, question_text, chapter_id)
+VALUES (NOW(), NOW(), '1', 'radio', 'Choose your playing position.', 'What position do you play in basketball?', @chapter3_id);
+
+INSERT INTO questions (created_at, updated_at, question_number, response_type, comment_question, question_text, chapter_id)
+VALUES (NOW(), NOW(), '2', 'text', 'Describe your experience with basketball.', 'How long have you been playing basketball?', @chapter3_id);
+
+-- Insert category for response options
+INSERT INTO categories_catalog (created_at, updated_at, name) VALUES (NOW(), NOW(), 'Basketball Preferences');
+
+-- Get the category ID
+SET @category_id = LAST_INSERT_ID();
+
+-- Insert response options for Chapter 1, Question 1
+INSERT INTO response_options (option_value, categorycatalog_id, created_at, updated_at, parentresponse_id, question_id, typecomponenthtml, comment_response, option_text)
+VALUES (1, @category_id, NOW(), NOW(), NULL, (SELECT id FROM questions WHERE question_number='1' AND chapter_id=@chapter1_id), 'radio', 'Choose Lakers', 'Los Angeles Lakers');
+
+INSERT INTO response_options (option_value, categorycatalog_id, created_at, updated_at, parentresponse_id, question_id, typecomponenthtml, comment_response, option_text)
+VALUES (2, @category_id, NOW(), NOW(), NULL, (SELECT id FROM questions WHERE question_number='1' AND chapter_id=@chapter1_id), 'radio', 'Choose Warriors', 'Golden State Warriors');
+
+INSERT INTO response_options (option_value, categorycatalog_id, created_at, updated_at, parentresponse_id, question_id, typecomponenthtml, comment_response, option_text)
+VALUES (3, @category_id, NOW(), NOW(), NULL, (SELECT id FROM questions WHERE question_number='1' AND chapter_id=@chapter1_id), 'radio', 'Choose Bulls', 'Chicago Bulls');
+
+-- Get the ID of the first response option
+SET @response_option1_id = LAST_INSERT_ID();
+
+-- Insert subresponse options for one response option
+INSERT INTO subresponse_options (created_at, updated_at, subresponse_number, component_html, subresponse_text, responseoptions_id)
+VALUES (NOW(), NOW(), 1, 'checkbox', '1980s Era', @response_option1_id);
+
+INSERT INTO subresponse_options (created_at, updated_at, subresponse_number, component_html, subresponse_text, responseoptions_id)
+VALUES (NOW(), NOW(), 2, 'checkbox', '2000s Era', @response_option1_id);
+
+-- Get the ID of the first subresponse option
+SET @subresponse_option1_id = LAST_INSERT_ID();
+
+-- Insert response question related to a response option
+INSERT INTO response_question (response_id, subresponses_id, responsetext)
+VALUES (@response_option1_id, NULL, 'Why did you choose the Lakers?');
+
+-- Insert response question related to a subresponse option
+INSERT INTO response_question (response_id, subresponses_id, responsetext)
+VALUES (NULL, @subresponse_option1_id, 'Why do you prefer the 1980s Era?');
+
+-- Insert response options for Chapter 2, Question 1
+INSERT INTO response_options (option_value, categorycatalog_id, created_at, updated_at, parentresponse_id, question_id, typecomponenthtml, comment_response, option_text)
+VALUES (1, @category_id, NOW(), NOW(), NULL, (SELECT id FROM questions WHERE question_number='1' AND chapter_id=@chapter2_id), 'radio', 'Choose LeBron James', 'LeBron James');
+
+INSERT INTO response_options (option_value, categorycatalog_id, created_at, updated_at, parentresponse_id, question_id, typecomponenthtml, comment_response, option_text)
+VALUES (2, @category_id, NOW(), NOW(), NULL, (SELECT id FROM questions WHERE question_number='1' AND chapter_id=@chapter2_id), 'radio', 'Choose Michael Jordan', 'Michael Jordan');
+
+INSERT INTO response_options (option_value, categorycatalog_id, created_at, updated_at, parentresponse_id, question_id, typecomponenthtml, comment_response, option_text)
+VALUES (3, @category_id, NOW(), NOW(), NULL, (SELECT id FROM questions WHERE question_number='1' AND chapter_id=@chapter2_id), 'radio', 'Choose Stephen Curry', 'Stephen Curry');
+
+-- Insert response options for Chapter 3, Question 1
+INSERT INTO response_options (option_value, categorycatalog_id, created_at, updated_at, parentresponse_id, question_id, typecomponenthtml, comment_response, option_text)
+VALUES (1, @category_id, NOW(), NOW(), NULL, (SELECT id FROM questions WHERE question_number='1' AND chapter_id=@chapter3_id), 'radio', 'Choose Point Guard', 'Point Guard');
+
+INSERT INTO response_options (option_value, categorycatalog_id, created_at, updated_at, parentresponse_id, question_id, typecomponenthtml, comment_response, option_text)
+VALUES (2, @category_id, NOW(), NOW(), NULL, (SELECT id FROM questions WHERE question_number='1' AND chapter_id=@chapter3_id), 'radio', 'Choose Shooting Guard', 'Shooting Guard');
+
+INSERT INTO response_options (option_value, categorycatalog_id, created_at, updated_at, parentresponse_id, question_id, typecomponenthtml, comment_response, option_text)
+VALUES (3, @category_id, NOW(), NOW(), NULL, (SELECT id FROM questions WHERE question_number='1' AND chapter_id=@chapter3_id), 'radio', 'Choose Center', 'Center');

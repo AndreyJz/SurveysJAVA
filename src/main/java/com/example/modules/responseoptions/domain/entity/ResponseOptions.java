@@ -1,8 +1,12 @@
 package com.example.modules.responseoptions.domain.entity;
 
-import java.sql.Timestamp;
+import com.example.UI.domain.service.GlobalService;
 
-public class ResponseOptions {
+import java.sql.Timestamp;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class ResponseOptions implements GlobalService {
     private int id;
     private int optionValue;
     private int categoryCatalogId;
@@ -74,5 +78,20 @@ public class ResponseOptions {
         this.optionText = optionText;
     }
 
-    
+
+    @Override
+    public Map<String, String> getTypes() {
+        Map<String, String> lista = new LinkedHashMap<>();
+        lista.put("Id", "Null");
+        lista.put("OptionValue", "TextField");
+        lista.put("CategoryCatalogId", "JComboBox");
+        lista.put("CreatedAt", "Null");
+        lista.put("UpdatedAt", "Null");
+        lista.put("ParentResponseId", "JComboBox");
+        lista.put("QuestionId", "JComboBox");
+        lista.put("TypeComponentHtml", "TextField");
+        lista.put("CommentResponse", "TextField");
+        lista.put("OptionText", "TextField");
+        return lista;
+    }
 }

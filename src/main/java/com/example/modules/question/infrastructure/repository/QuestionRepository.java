@@ -28,7 +28,7 @@ public class QuestionRepository implements QuestionService {
 
     @Override
     public void createQuestion(Question question) {
-        String query = "INSERT INTO question (id, created_at, updated_at, question_number, response_type, comment_question, question_text, chapter_id) VALUES (?, NOW, NULL, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO questions (id, created_at, updated_at, question_number, response_type, comment_question, question_text, chapter_id) VALUES (?, NOW, NULL, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, question.getId());
             ps.setString(2, question.getQuestionNumber());
@@ -46,7 +46,7 @@ public class QuestionRepository implements QuestionService {
 
     @Override
     public void updateQuestion(Question question) {
-        String query = "UPDATE question SET updated_at = NOW, question_number = ?, reponse_type = ?, comment_question = ?, question_text = ?, chapter_id = ? WHERE id = ?";
+        String query = "UPDATE questions SET updated_at = NOW, question_number = ?, reponse_type = ?, comment_question = ?, question_text = ?, chapter_id = ? WHERE id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, question.getQuestionNumber());
@@ -65,7 +65,7 @@ public class QuestionRepository implements QuestionService {
 
     @Override
     public void deleteQuestion(int id) {
-        String query = "DELETE FROM question WHERE id = ?";
+        String query = "DELETE FROM questions WHERE id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setInt(1, id);
@@ -79,7 +79,7 @@ public class QuestionRepository implements QuestionService {
 
     @Override
     public Optional<Question> findQuestionById(int id) {
-        String query = "SELECT * FROM question WHERE id = ?";
+        String query = "SELECT * FROM questions WHERE id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setInt(1, id);
@@ -105,7 +105,7 @@ public class QuestionRepository implements QuestionService {
 
     @Override
     public List<Question> listQuestions() {
-        String query = "SELECT * FROM question";
+        String query = "SELECT * FROM questions";
         List<Question> questions = new ArrayList<>();
         try {
             PreparedStatement ps = connection.prepareStatement(query);
@@ -131,7 +131,7 @@ public class QuestionRepository implements QuestionService {
 
     @Override
     public Optional<Question> findQuestionsByName(String name) {
-        String query = "SELECT * FROM question WHERE comment_question = ?";
+        String query = "SELECT * FROM questions WHERE comment_question = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, name);
@@ -156,7 +156,7 @@ public class QuestionRepository implements QuestionService {
 
     @Override
     public List<Question> listQuestionsByChapterId(int id) {
-        String query = "SELECT * FROM question WHERE chapter_id = ?";
+        String query = "SELECT * FROM questions WHERE chapter_id = ?";
         List<Question> questions = new ArrayList<>();
         try {
             PreparedStatement ps = connection.prepareStatement(query);

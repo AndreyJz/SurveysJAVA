@@ -58,11 +58,11 @@ public class ChapterController {
     public void createChapter() {
         Chapter chapter = new Chapter();
         List<Object> listOfSurvey = Arrays.asList(listSurveysUC,findSurveyByNameUC);
-        List<Object> listOfChapters = Arrays.asList(listChaptersUC,findChapterByNameUC);
+//        List<Object> listOfChapters = Arrays.asList(listChaptersUC,findChapterByNameUC);
         mapOfList = new LinkedHashMap<>();
 
         mapOfList.put("Survey", listOfSurvey);
-        mapOfList.put("Chapter", listOfChapters);
+//        mapOfList.put("Chapter", listOfChapters);
         this.createController = new CreateController(chapter, createChapterUC, mapOfList);
     }
 

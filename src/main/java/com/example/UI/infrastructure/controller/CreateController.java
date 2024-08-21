@@ -93,9 +93,28 @@ public class CreateController extends JFrame implements ActionListener {
             Method listMethod = listService.getClass().getMethod("list");
             List<?> items = (List<?>) listMethod.invoke(listService);
 
-            String propertyName = entity.getClass().getSimpleName().equals("Chapter") ? "Name" : "ChapterTitle";
+            String propertyName = "Name";
 
             for (Object item : items) {
+
+                switch (item.getClass().getSimpleName()) {
+                    case "Chapter":
+                        propertyName = "ChapterTitle";
+                        break;
+                    case "Question":
+                        propertyName = "QuestionText";
+                        break;
+                    case "ResponseOptions":
+                        propertyName = "OptionText";
+                        break;
+                    case "":
+                        propertyName = "Title";
+                        break;
+                    default:
+                        propertyName = "Name";
+                        break;
+                }
+
                 Method getPropertyMethod = item.getClass().getMethod("get" + propertyName);
                 comboBox.addItem((String) getPropertyMethod.invoke(item));
             }

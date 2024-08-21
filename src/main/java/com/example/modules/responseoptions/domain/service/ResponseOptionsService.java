@@ -11,5 +11,6 @@ public interface ResponseOptionsService {
     public void deleteResponseOptions(int id);
     public Optional<ResponseOptions> findResponseOptionsById(int id);
     public List<ResponseOptions> listResponseOptions();
+    public Optional<ResponseOptions> findResponseOptionsByName(String name);
     public List<ResponseOptions> findResponseOptionsByCategoryCatalogId(int id);
 }

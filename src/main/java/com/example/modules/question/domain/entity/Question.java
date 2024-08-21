@@ -86,14 +86,14 @@ public class Question implements GlobalService {
     @Override
     public Hashtable<String, String> getTypes() {
         Hashtable<String, String> types = new Hashtable<>();
-        types.put("id", "TextField");
-        types.put("createdAt", "JDateChooser");
-        types.put("updatedAt", "JDateChooser");
-        types.put("questionNumber", "TextField");
-        types.put("responseType", "TextField");
-        types.put("commentQuestion", "TextField");
-        types.put("questionText", "TextField");
-        types.put("chapterId", "JComboBox");
+        types.put("Id", "TextField");
+        types.put("CreatedAt", "JDateChooser");
+        types.put("UpdatedAt", "JDateChooser");
+        types.put("QuestionNumber", "TextField");
+        types.put("ResponseType", "TextField");
+        types.put("CommentQuestion", "TextField");
+        types.put("QuestionText", "TextField");
+        types.put("ChapterId", "JComboBox");
         return types;
     }
 }

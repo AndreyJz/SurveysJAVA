@@ -1,6 +1,8 @@
 package com.example.modules.responseoptions.infrastructure.controller;
 
 import com.example.UI.infrastructure.controller.*;
+import com.example.modules.categoriescatalog.application.*;
+import com.example.modules.question.application.*;
 import com.example.modules.responseoptions.application.*;
 import com.example.modules.responseoptions.domain.entity.ResponseOptions;
 
@@ -16,13 +18,26 @@ public class ResponseOptionsController {
     private UpdateResponseOptionsUC updateResponseOptionsUC;
     private DeleteResponseOptionsUC deleteResponseOptionsUC;
     private FindResponseOptionsByIdUC findResponseOptionsByIdUC;
+    private FindResponseOptionsByNameUC findResponseOptionsByNameUC;
     private FindResponseOptionsByCategoryCatalogIdUC findResponseOptionsByCategoryCatalogIdUC;
     private ListResponseOptionsUC listResponseOptionsUC;
+    private FindCategoriesCatalogByNameUC findCategoriesCatalogByNameUC;
+    private FindCategoriesCatalogByIdUC findCategoriesCatalogByIdUC;
+    private ListCategoriesCatalogsUC listCategoriesCatalogsUC;
+    private FindQuestionByNameUC findQuestionByNameUC;
+    private FindQuestionByIdUC findQuestionByIdUC;
+    private ListQuestionsUC listQuestionsUC;
+
     Map<String, List<Object>> mapOfList;
 
-    public ResponseOptionsController(CreateResponseOptionsUC createResponseOptionsUC, FindResponseOptionsByCategoryCatalogIdUC findResponseOptionsByCategoryCatalogIdUC) {
+    public ResponseOptionsController(CreateResponseOptionsUC createResponseOptionsUC, ListCategoriesCatalogsUC listCategoriesCatalogsUC, FindCategoriesCatalogByNameUC findCategoriesCatalogByNameUC, ListResponseOptionsUC listResponseOptionsUC, FindResponseOptionsByNameUC findResponseOptionsByNameUC, ListQuestionsUC listQuestionsUC, FindQuestionByNameUC findQuestionByNameUC) {
         this.createResponseOptionsUC = createResponseOptionsUC;
-        this.findResponseOptionsByCategoryCatalogIdUC = findResponseOptionsByCategoryCatalogIdUC;
+        this.listCategoriesCatalogsUC = listCategoriesCatalogsUC;
+        this.findCategoriesCatalogByNameUC = findCategoriesCatalogByNameUC;
+        this.listResponseOptionsUC = listResponseOptionsUC;
+        this.findResponseOptionsByNameUC = findResponseOptionsByNameUC;
+        this.listQuestionsUC = listQuestionsUC;
+        this.findQuestionByNameUC = findQuestionByNameUC;
     }
 
     public ResponseOptionsController(UpdateResponseOptionsUC updateResponseOptionsUC, ListResponseOptionsUC listResponseOptionsUC, FindResponseOptionsByCategoryCatalogIdUC findResponseOptionsByCategoryCatalogIdUC) {
@@ -47,10 +62,14 @@ public class ResponseOptionsController {
 
     public void createResponseOptions() {
         ResponseOptions responseOptions = new ResponseOptions();
-        List<Object> listOfOptions = Arrays.asList(listResponseOptionsUC, findResponseOptionsByCategoryCatalogIdUC);
+        List<Object> listOfResponseOption = Arrays.asList(listResponseOptionsUC, findResponseOptionsByNameUC);
+        List<Object> listOfCategory = Arrays.asList(listCategoriesCatalogsUC, findCategoriesCatalogByNameUC);
+        List<Object> listOfQuestion = Arrays.asList(listQuestionsUC, findQuestionByNameUC);
         mapOfList = new LinkedHashMap<>();
 
-        mapOfList.put("ResponseOptions", listOfOptions);
+        mapOfList.put("ResponseOptions", listOfResponseOption);
+        mapOfList.put("Category", listOfCategory);
+        mapOfList.put("Question", listOfQuestion);
         this.createController = new CreateController(responseOptions, createResponseOptionsUC, mapOfList);
     }
 

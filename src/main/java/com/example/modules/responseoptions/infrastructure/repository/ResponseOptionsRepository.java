@@ -136,6 +136,34 @@ public class ResponseOptionsRepository implements ResponseOptionsService {
     }
 
     @Override
+    public Optional<ResponseOptions> findResponseOptionsByName(String name) {
+        String query = "SELECT * FROM response_options WHERE option_text = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, name);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    ResponseOptions responseOptions = new ResponseOptions();
+                    responseOptions.setId(rs.getInt("id"));
+                    responseOptions.setOptionValue(rs.getInt("option_value"));
+                    responseOptions.setCategoryCatalogId(rs.getInt("categorycatalog_id"));
+                    responseOptions.setCreatedAt(rs.getTimestamp("created_at"));
+                    responseOptions.setUpdatedAt(rs.getTimestamp("updated_at"));
+                    responseOptions.setParentResponseId(rs.getInt("parentresponse_id"));
+                    responseOptions.setQuestionId(rs.getInt("question_id"));
+                    responseOptions.setTypeComponentHtml(rs.getString("typecomponenthtml"));
+                    responseOptions.setCommentResponse(rs.getString("comment_response"));
+                    responseOptions.setOptionText(rs.getString("option_text"));
+                    return Optional.of(responseOptions);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public List<ResponseOptions> findResponseOptionsByCategoryCatalogId(int Id) {
         String query = "SELECT * FROM response_options WHERE categorycatalog_id = ?";
         try {
