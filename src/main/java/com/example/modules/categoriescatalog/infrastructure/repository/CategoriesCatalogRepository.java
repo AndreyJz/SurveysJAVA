@@ -1,4 +1,4 @@
-package com.example.modules.categoriescatalog.infrastructure.reporsitory;
+package com.example.modules.categoriescatalog.infrastructure.repository;
 
 import com.example.modules.categoriescatalog.domain.entity.CategoriesCatalog;
 import com.example.modules.categoriescatalog.domain.service.CategoriesCatalogService;

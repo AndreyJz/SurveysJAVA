@@ -16,7 +16,7 @@ import com.example.modules.survey.domain.service.SurveySercive;
 import com.example.modules.survey.infrastructure.repository.SurveyRepository;
 import com.example.modules.categoriescatalog.domain.service.CategoriesCatalogService;
 import com.example.modules.categoriescatalog.infrastructure.controller.CategoriesCatalogController;
-import com.example.modules.categoriescatalog.infrastructure.reporsitory.CategoriesCatalogRepository;
+import com.example.modules.categoriescatalog.infrastructure.repository.CategoriesCatalogRepository;
 
 import javax.swing.*;
 import java.awt.*;
