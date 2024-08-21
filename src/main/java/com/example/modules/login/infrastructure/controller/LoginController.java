@@ -1,11 +1,23 @@
 package com.example.modules.login.infrastructure.controller;
 
 import com.example.UI.infrastructure.controller.AdminForumController;
+import com.example.modules.chapter.application.ListChapterBySurveyIdUC;
+import com.example.modules.chapter.domain.service.ChapterService;
+import com.example.modules.chapter.infrastructure.repository.ChapterRepository;
 import com.example.modules.login.application.LoginCheckUC;
 import com.example.modules.login.application.RoleUC;
 import com.example.modules.login.domain.entity.Login;
 import com.example.modules.login.domain.service.LoginService;
 import com.example.modules.login.infrastructure.repository.LoginRepository;
+import com.example.modules.question.application.ListQuestionsByChapterIdUC;
+import com.example.modules.question.domain.service.QuestionService;
+import com.example.modules.question.infrastructure.repository.QuestionRepository;
+import com.example.modules.survey.application.FindSurveyByIdUC;
+import com.example.modules.survey.application.FindSurveyByNameUC;
+import com.example.modules.survey.application.ListSurveysUC;
+import com.example.modules.survey.domain.service.SurveySercive;
+import com.example.modules.survey.infrastructure.controller.SurveyController;
+import com.example.modules.survey.infrastructure.repository.SurveyRepository;
 
 import javax.swing.*;
 import java.awt.*;
@@ -96,7 +108,19 @@ public class LoginController extends JFrame implements ActionListener {
                 menu.setLocationRelativeTo(null);
                 menu.setVisible(true);
             } else {
-                System.out.println("no");
+                setVisible(false);
+                SurveySercive ss = new SurveyRepository();
+                ChapterService cs = new ChapterRepository();
+                QuestionService qs = new QuestionRepository();
+                ListSurveysUC lss = new ListSurveysUC(ss);
+                FindSurveyByNameUC fs = new FindSurveyByNameUC(ss);
+                ListChapterBySurveyIdUC lc = new ListChapterBySurveyIdUC(cs);
+                ListQuestionsByChapterIdUC lq = new ListQuestionsByChapterIdUC(qs);
+                SurveyController menu = new SurveyController(lss,fs,lc,lq);
+                menu.fillSurvey();
+                menu.setResizable(false);
+                menu.setLocationRelativeTo(null);
+                menu.setVisible(true);
             }
         }
     }

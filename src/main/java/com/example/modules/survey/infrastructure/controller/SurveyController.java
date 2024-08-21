@@ -1,8 +1,10 @@
 package com.example.modules.survey.infrastructure.controller;
 
-import com.example.modules.survey.application.FindSurveyByIdUC;
-import com.example.modules.survey.application.FindSurveyByNameUC;
-import com.example.modules.survey.application.ListSurveysUC;
+import com.example.modules.chapter.domain.entity.Chapter;
+import com.example.modules.survey.application.*;
+import com.example.modules.chapter.application.*;
+import com.example.modules.question.application.*;
+import com.example.modules.categoriescatalog.application.*;
 import com.example.modules.survey.domain.entity.Survey;
 
 import javax.swing.*;
@@ -10,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +20,8 @@ public class SurveyController extends JFrame implements ActionListener {
     private FindSurveyByIdUC findSurveyByIdUC;
     private FindSurveyByNameUC findSurveyByNameUC;
     private ListSurveysUC listSurveysUC;
+    private ListChapterBySurveyIdUC listChapterBySurveyIdUC;
+    private ListQuestionsByChapterIdUC listQuestionsByChapterIdUC;
 
     private JPanel mainPanel;
     private JPanel contentPanel;
@@ -27,6 +32,13 @@ public class SurveyController extends JFrame implements ActionListener {
     private JPanel sectionPanel;
     private JButton toggleButton;
     private JComboBox<String> selectComboBox;
+
+    public SurveyController(ListSurveysUC ls, FindSurveyByNameUC fs, ListChapterBySurveyIdUC lc, ListQuestionsByChapterIdUC lq) {
+        this.listSurveysUC = ls;
+        this.findSurveyByNameUC = fs;
+        this.listChapterBySurveyIdUC = lc;
+        this.listQuestionsByChapterIdUC = lq;
+    }
 
     public void fillSurvey() {
         setTitle("Fill Surveys");
@@ -86,7 +98,7 @@ public class SurveyController extends JFrame implements ActionListener {
         return Optional.empty();
     }
 
-    private void generateSurvey () {
+    private void generateSurvey (int surveyId) {
         contentPanel.setBackground(new Color(0x123456));
         contentPanel.setLayout(new GridLayout(0, 2, 10, 10));
         contentPanel.setBounds(35, 60, 425, 470);
@@ -96,7 +108,11 @@ public class SurveyController extends JFrame implements ActionListener {
         cancelButton = new JButton("Exit");
         cancelButton.addActionListener(this);
 
-
+        List<Chapter> chapters = listChapterBySurveyIdUC.list(surveyId);
+        chapters.forEach(chapter -> {
+            String title = chapter.getChapterTitle();
+            generateChapter(title);
+        });
 
         contentPanel.add(cancelButton);
         contentPanel.add(sendButton);
@@ -105,7 +121,8 @@ public class SurveyController extends JFrame implements ActionListener {
         add(contentPanel);
     }
 
-    public void ExpandableSection(String title, JPanel content) {
+    public void generateChapter(String title) {
+        JPanel content = new JPanel();
         content.setLayout(new BorderLayout());
 
         // Create the header with the toggle button
@@ -130,10 +147,6 @@ public class SurveyController extends JFrame implements ActionListener {
             revalidate();
             repaint();
         }
-    }
-
-    public void generateChapter() {
-
     }
 
     public void getInfo(Survey survey) {
@@ -166,6 +179,26 @@ public class SurveyController extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == backButton) {
+            mainPanel.setVisible(true);
+            contentPanel.setVisible(false);
+        } else if (e.getSource() == nextButton) {
+            String selectedItem = (String) selectComboBox.getSelectedItem();
+            Optional<Survey> survey = findSurveyByNameUC.find(selectedItem);
+            generateSurvey(survey.get().getId());
+        } else if (e.getSource() == cancelButton) {
+            dispose();
+        } else if (e.getSource() == sendButton) {
+//            mainPanel.setVisible(false);
+//            String selected = (String) selectComboBox.getSelectedItem();
+//            try {
+//                Method filterMethod = findServiceEntity.getClass().getMethod("find", String.class);
+//                selectedUpdate = (Optional<?>) filterMethod.invoke(findServiceEntity, selected);
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
 
+//            generateUpdateForm(selectedUpdate.get());
+        }
     }
 }
