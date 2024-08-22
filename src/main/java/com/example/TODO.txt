@@ -1,0 +1,11 @@
+surverys: listar, buscar
+
+create: el mismo, listar y buscar
+delete: el mismo, listar y buscar
+list: solo list
+buscar: solo buscar
+update: el mismo, listar buscar las que las contenga y las de sus madre (de quien recibe la key) 
+
+
+errores en el controller, posiblemente
+admin forum con todas las calls

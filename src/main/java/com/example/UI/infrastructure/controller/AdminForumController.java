@@ -189,8 +189,8 @@ public class AdminForumController extends JFrame implements ActionListener {
     ChapterService cs = new ChapterRepository();
     SurveySercive ss = new SurveyRepository();
     CategoriesCatalogService ccs = new CategoriesCatalogRepository();
-    ResponseOptionsService rs = new ResponseOptionsRepository();
-    SubresponseOptionsService sop = new SubresponseOptionsRepository();
+    ResponseOptionsService ros = new ResponseOptionsRepository();
+    SubresponseOptionsService sos = new SubresponseOptionsRepository();
 //    UnitMeasurementService us = new UnitMeasurementRepository();
 //    ActivePrincipleService as = new ActivePrincipleRepository();
 //    ModeadministrationService ms = new ModeAdministrationRepository();
@@ -226,11 +226,11 @@ public class AdminForumController extends JFrame implements ActionListener {
 //            CategoriesCatalogController lc = new CategoriesCatalogController(cl, fc, fcn);
 //            lc.createCategoriesCatalog();
         } else if (entity.equals("ResponseOptions")) {
-            CreateResponseOptionsUC cr = new CreateResponseOptionsUC(rs);
+            CreateResponseOptionsUC cr = new CreateResponseOptionsUC(ros);
             ListCategoriesCatalogsUC lc = new ListCategoriesCatalogsUC(ccs);
             FindCategoriesCatalogByNameUC fcn = new FindCategoriesCatalogByNameUC(ccs);
-            ListResponseOptionsUC lr = new ListResponseOptionsUC(rs);
-            FindResponseOptionsByNameUC fr = new FindResponseOptionsByNameUC(rs);
+            ListResponseOptionsUC lr = new ListResponseOptionsUC(ros);
+            FindResponseOptionsByNameUC fr = new FindResponseOptionsByNameUC(ros);
             ListQuestionsUC lq = new ListQuestionsUC(qs);
             FindQuestionByNameUC fq = new FindQuestionByNameUC(qs);
             ResponseOptionsController c = new ResponseOptionsController(cr,lc,fcn,lr,fr,lq,fq);
@@ -240,8 +240,7 @@ public class AdminForumController extends JFrame implements ActionListener {
 //            ModeAdministrationController mc = new ModeAdministrationController(cm);
 //            mc.createModeAdministration();
         } else if (entity.equals("SubresponseOptions")) {
-            CreateSubresponseOptionsUC cso = new CreateSubresponseOptionsUC(sop);
-            ListSubresponseOptionsUC
+            CreateSubresponseOptionsUC cso = new CreateSubresponseOptionsUC(sos);
             //ERROR MAMAWEBO
             // <3 con amor, yo y GPT
 //            CreateActivePrincipleUC ca = new CreateActivePrincipleUC(as);
@@ -506,9 +505,9 @@ public class AdminForumController extends JFrame implements ActionListener {
 //            LaboratoryController lc = new LaboratoryController(dl,fl,fln);
 //            lc.deleteLaboratory();
         } else if (entity.equals("ResponseOptions")) {
-            DeleteResponseOptionsUC dr = new DeleteResponseOptionsUC(rs);
-            ListResponseOptionsUC lr = new ListResponseOptionsUC(rs);
-            FindResponseOptionsByNameUC fr = new FindResponseOptionsByNameUC(rs);
+            DeleteResponseOptionsUC dr = new DeleteResponseOptionsUC(ros);
+            ListResponseOptionsUC lr = new ListResponseOptionsUC(ros);
+            FindResponseOptionsByNameUC fr = new FindResponseOptionsByNameUC(ros);
             ResponseOptionsController cc = new ResponseOptionsController(dr,lr,fr);
             cc.deleteResponseOptions();
         } else if (entity.equals("ModeAdministration")) {

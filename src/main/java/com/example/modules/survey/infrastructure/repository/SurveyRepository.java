@@ -15,7 +15,8 @@ public class SurveyRepository implements SurveySercive {
             props.load(getClass().getClassLoader().getResourceAsStream("configdb.properties"));
             String url = props.getProperty("url");
             String user = props.getProperty("user");
-            connection = DriverManager.getConnection(url, user, "");
+            String password = props.getProperty("password");
+            connection = DriverManager.getConnection(url,user,password);
         } catch (Exception e) {
             e.printStackTrace();
         }
