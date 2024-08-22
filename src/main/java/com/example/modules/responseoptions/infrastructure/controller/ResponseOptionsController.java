@@ -46,10 +46,10 @@ public class ResponseOptionsController {
         this.findResponseOptionsByCategoryCatalogIdUC = findResponseOptionsByCategoryCatalogIdUC;
     }
 
-    public ResponseOptionsController(DeleteResponseOptionsUC deleteResponseOptionsUC, ListResponseOptionsUC listResponseOptionsUC, FindResponseOptionsByCategoryCatalogIdUC findResponseOptionsByCategoryCatalogIdUC) {
+    public ResponseOptionsController(DeleteResponseOptionsUC deleteResponseOptionsUC, ListResponseOptionsUC listResponseOptionsUC, FindResponseOptionsByNameUC findResponseOptionsByNameUC) {
         this.deleteResponseOptionsUC = deleteResponseOptionsUC;
         this.listResponseOptionsUC = listResponseOptionsUC;
-        this.findResponseOptionsByCategoryCatalogIdUC = findResponseOptionsByCategoryCatalogIdUC;
+        this.findResponseOptionsByNameUC = findResponseOptionsByNameUC;
     }
 
     public ResponseOptionsController(ListResponseOptionsUC listResponseOptionsUC) {
@@ -84,7 +84,9 @@ public class ResponseOptionsController {
 
     public void deleteResponseOptions() {
         ResponseOptions responseOptions = new ResponseOptions();
-        this.deleteController = new DeleteController(responseOptions, deleteResponseOptionsUC, listResponseOptionsUC, findResponseOptionsByCategoryCatalogIdUC);
+        this.listResponseOptionsUC = listResponseOptionsUC;
+        this.findResponseOptionsByNameUC = findResponseOptionsByNameUC;
+        this.deleteController = new DeleteController(responseOptions, deleteResponseOptionsUC, listResponseOptionsUC, findResponseOptionsByNameUC);
     }
 
     public void listResponseOptions() {

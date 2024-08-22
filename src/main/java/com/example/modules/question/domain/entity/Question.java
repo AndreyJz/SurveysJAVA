@@ -4,6 +4,8 @@ import com.example.UI.domain.service.GlobalService;
 
 import java.sql.Date;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Question implements GlobalService {
     private int id;
@@ -84,8 +86,8 @@ public class Question implements GlobalService {
 
 
     @Override
-    public Hashtable<String, String> getTypes() {
-        Hashtable<String, String> types = new Hashtable<>();
+    public Map<String, String> getTypes() {
+        Map<String, String> types = new LinkedHashMap<>();
         types.put("Id", "TextField");
         types.put("CreatedAt", "JDateChooser");
         types.put("UpdatedAt", "JDateChooser");

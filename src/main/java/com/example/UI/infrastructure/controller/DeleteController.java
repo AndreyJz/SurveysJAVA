@@ -80,7 +80,7 @@ public class DeleteController extends JFrame implements ActionListener {
                         propertyName = "CommentQuestion";
                         break;
                     default:
-                        propertyName = "Name";
+                        propertyName = "OptionText";
                 }
 
                 System.out.println(item);

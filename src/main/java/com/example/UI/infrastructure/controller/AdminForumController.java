@@ -14,6 +14,7 @@ import com.example.modules.question.domain.service.QuestionService;
 import com.example.modules.question.infrastructure.controller.QuestionController;
 import com.example.modules.question.infrastructure.repository.QuestionRepository;
 import com.example.modules.responseoptions.application.CreateResponseOptionsUC;
+import com.example.modules.responseoptions.application.DeleteResponseOptionsUC;
 import com.example.modules.responseoptions.application.FindResponseOptionsByNameUC;
 import com.example.modules.responseoptions.application.ListResponseOptionsUC;
 import com.example.modules.responseoptions.domain.service.ResponseOptionsService;
@@ -496,11 +497,11 @@ public class AdminForumController extends JFrame implements ActionListener {
 //            LaboratoryController lc = new LaboratoryController(dl,fl,fln);
 //            lc.deleteLaboratory();
         } else if (entity.equals("ResponseOptions")) {
-//            DeleteResponseOptionsUC dcuc = new DeleteResponseOptionsUC(ccss);
-//            ListAllResponseOptionssUC fcsuc = new ListAllResponseOptionssUC(ccss);
-//            FindResponseOptionsByNameUC fciduc = new FindResponseOptionsByNameUC(ccss);
-//            ResponseOptionsController c = new ResponseOptionsController(dcuc, fcsuc, fciduc);
-//            c.deleteResponseOptions();
+            DeleteResponseOptionsUC dr = new DeleteResponseOptionsUC(rs);
+            ListResponseOptionsUC lr = new ListResponseOptionsUC(rs);
+            FindResponseOptionsByNameUC fr = new FindResponseOptionsByNameUC(rs);
+            ResponseOptionsController cc = new ResponseOptionsController(dr,lr,fr);
+            cc.deleteResponseOptions();
         } else if (entity.equals("ModeAdministration")) {
 //            ModeadministrationService ms = new ModeAdministrationRepository();
 //            ListModeadministrationsUC fcsuc = new ListModeadministrationsUC(ms);

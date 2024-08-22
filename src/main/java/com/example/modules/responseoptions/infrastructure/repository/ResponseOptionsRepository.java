@@ -36,6 +36,7 @@ public class ResponseOptionsRepository implements ResponseOptionsService {
             ps.setString(5, responseOptions.getTypeComponentHtml());
             ps.setString(6, responseOptions.getCommentResponse());
             ps.setString(7, responseOptions.getOptionText());
+            System.out.println(responseOptions.getCategoryCatalogId());
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "ResponseOptions has been created!", "Success", JOptionPane.PLAIN_MESSAGE);
         } catch (SQLException e) {

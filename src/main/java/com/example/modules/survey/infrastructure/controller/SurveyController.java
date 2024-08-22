@@ -4,7 +4,6 @@ import com.example.modules.chapter.domain.entity.Chapter;
 import com.example.modules.survey.application.*;
 import com.example.modules.chapter.application.*;
 import com.example.modules.question.application.*;
-import com.example.modules.categoriescatalog.application.*;
 import com.example.modules.survey.domain.entity.Survey;
 
 import javax.swing.*;
@@ -12,7 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +24,7 @@ public class SurveyController extends JFrame implements ActionListener {
 
     private JPanel mainPanel;
     private JPanel contentPanel;
+    private JPanel chapter;
     private JButton backButton;
     private JButton nextButton;
     private JButton cancelButton;
@@ -32,6 +32,7 @@ public class SurveyController extends JFrame implements ActionListener {
     private JPanel sectionPanel;
     private JButton toggleButton;
     private JComboBox<String> selectComboBox;
+    private List<JPanel> chapterPanels;
 
     public SurveyController(ListSurveysUC ls, FindSurveyByNameUC fs, ListChapterBySurveyIdUC lc, ListQuestionsByChapterIdUC lq) {
         this.listSurveysUC = ls;
@@ -42,7 +43,7 @@ public class SurveyController extends JFrame implements ActionListener {
 
     public void fillSurvey() {
         setTitle("Fill Surveys");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setBackground(new Color(0x123456));
         setSize(500, 700);
         setLayout(null);
@@ -99,21 +100,25 @@ public class SurveyController extends JFrame implements ActionListener {
     }
 
     private void generateSurvey (int surveyId) {
+        contentPanel = new JPanel();
         contentPanel.setBackground(new Color(0x123456));
-        contentPanel.setLayout(new GridLayout(0, 2, 10, 10));
         contentPanel.setBounds(35, 60, 425, 470);
+
+        chapter = new JPanel(new GridLayout(0, 1, 10, 10));
+        chapter.setBackground(new Color(0x123456));
+        List<Chapter> chapters = listChapterBySurveyIdUC.list(surveyId);
+        chapters.forEach(chapter -> {
+            String title = chapter.getChapterTitle();
+            generateChapter(title,chapter.getId());
+        });
 
         sendButton = new JButton("Send");
         sendButton.addActionListener(this);
         cancelButton = new JButton("Exit");
         cancelButton.addActionListener(this);
 
-        List<Chapter> chapters = listChapterBySurveyIdUC.list(surveyId);
-        chapters.forEach(chapter -> {
-            String title = chapter.getChapterTitle();
-            generateChapter(title);
-        });
 
+        contentPanel.add(chapter);
         contentPanel.add(cancelButton);
         contentPanel.add(sendButton);
 
@@ -121,37 +126,62 @@ public class SurveyController extends JFrame implements ActionListener {
         add(contentPanel);
     }
 
-    public void generateChapter(String title) {
+    public void generateChapter(String title,int chapterId) {
         JPanel content = new JPanel();
-        content.setLayout(new BorderLayout());
 
         // Create the header with the toggle button
+        chapterPanels = new ArrayList<>();
         toggleButton = new JButton(title);
-        toggleButton.addActionListener(new ToggleAction());
 
         // Add the header (button) to the top
-        add(toggleButton, BorderLayout.NORTH);
+        sectionPanel = new JPanel(new BorderLayout());
+        sectionPanel.add(toggleButton, BorderLayout.NORTH);
+        sectionPanel.setBackground(new Color(0x123456));
+        sectionPanel.add(content);
+        sectionPanel.setVisible(true);
 
-        // Add the content panel (initially hidden)
-        sectionPanel = content;
-        sectionPanel.setVisible(false);
-        add(sectionPanel, BorderLayout.CENTER);
+        chapter.add(sectionPanel);
+
+        chapterPanels.add(content);
+
+        generateInfo(content,chapterId);
+
+        content.setVisible(false);
+        toggleButton.addActionListener(new ToggleAction(content));
+
+    }
+
+    public void generateInfo(JPanel content, int chapterId) {
+        listQuestionsByChapterIdUC.list(chapterId).forEach(question -> {
+            JLabel questionLabel = new JLabel("Q" + question.getQuestionNumber() + ": " + question.getQuestionText());
+            content.add(questionLabel);
+            if (question.getResponseType().equals("radio")) {
+
+                JRadioButton response = new JRadioButton();
+                content.add(response);
+            } else {
+                JTextField response = new JTextField();
+                content.add(response);
+            }
+        });
     }
 
     private class ToggleAction implements ActionListener {
+        private JPanel content;
+
+        public ToggleAction(JPanel content) {
+            this.content = content;
+        }
+
         @Override
         public void actionPerformed(ActionEvent e) {
-            boolean isVisible = contentPanel.isVisible();
-            contentPanel.setVisible(!isVisible);
+            boolean isVisible = content.isVisible();
+            content.setVisible(!isVisible);
 
             revalidate();
             repaint();
         }
-    }
 
-    public void getInfo(Survey survey) {
-        survey.getId();
-        survey.getName();
     }
 
     public List<Survey> ListSurveys() {
@@ -179,14 +209,15 @@ public class SurveyController extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == backButton) {
+        if (e.getSource() == cancelButton) {
             mainPanel.setVisible(true);
             contentPanel.setVisible(false);
         } else if (e.getSource() == nextButton) {
+            mainPanel.setVisible(false);
             String selectedItem = (String) selectComboBox.getSelectedItem();
             Optional<Survey> survey = findSurveyByNameUC.find(selectedItem);
             generateSurvey(survey.get().getId());
-        } else if (e.getSource() == cancelButton) {
+        } else if (e.getSource() == backButton) {
             dispose();
         } else if (e.getSource() == sendButton) {
 //            mainPanel.setVisible(false);
