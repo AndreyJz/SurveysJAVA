@@ -1,8 +1,5 @@
 package com.example.UI.infrastructure.controller;
 
-import com.example.modules.categoriescatalog.application.CreateCategoriesCatalogUC;
-import com.example.modules.categoriescatalog.application.FindCategoriesCatalogByNameUC;
-import com.example.modules.categoriescatalog.application.ListCategoriesCatalogsUC;
 import com.example.modules.chapter.application.*;
 import com.example.modules.chapter.domain.service.ChapterService;
 import com.example.modules.chapter.infrastructure.controller.ChapterController;
@@ -25,9 +22,16 @@ import com.example.modules.survey.application.FindSurveyByNameUC;
 import com.example.modules.survey.application.ListSurveysUC;
 import com.example.modules.survey.domain.service.SurveySercive;
 import com.example.modules.survey.infrastructure.repository.SurveyRepository;
+import com.example.modules.categoriescatalog.application.FindCategoriesCatalogByNameUC;
+import com.example.modules.categoriescatalog.application.ListCategoriesCatalogsUC;
+import com.example.modules.categoriescatalog.application.CreateCategoriesCatalogUC;
 import com.example.modules.categoriescatalog.domain.service.CategoriesCatalogService;
 import com.example.modules.categoriescatalog.infrastructure.controller.CategoriesCatalogController;
 import com.example.modules.categoriescatalog.infrastructure.repository.CategoriesCatalogRepository;
+import com.example.modules.subresponseoptions.application.*;
+import com.example.modules.subresponseoptions.domain.service.SubresponseOptionsService;
+import com.example.modules.subresponseoptions.infrastructure.controller.SubresponseOptionsController;
+import com.example.modules.subresponseoptions.infrastructure.repository.SubresponseOptionsRepository;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,14 +84,14 @@ public class AdminForumController extends JFrame implements ActionListener {
     }
 
     private void initializeMainPanel() {
-        String[] mainOptions = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "ModeAdministration", "ActivePrinciple", "UnitMeasurement", "Farmacy", "Medicine", "Farmacy-Medicine"};
+        String[] mainOptions = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "ModeAdministration", "SubresponseOptions", "UnitMeasurement", "Farmacy", "Medicine", "Farmacy-Medicine"};
         for (String option : mainOptions) {
             addButton(mainMenuPanel, option, this);
         }
     }
 
     private void initializeSubPanels() {
-        String[] entities = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "ModeAdministration", "ActivePrinciple", "UnitMeasurement", "Farmacy", "Medicine", "Farmacy-Medicine"};
+        String[] entities = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "ModeAdministration", "SubresponseOptions", "UnitMeasurement", "Farmacy", "Medicine", "Farmacy-Medicine"};
         for (String entity : entities) {
             JPanel panel = new JPanel(new GridLayout(6, 1, 10, 10));
             addEntityButtons(panel, entity);
@@ -133,7 +137,7 @@ public class AdminForumController extends JFrame implements ActionListener {
             icon = new ImageIcon(new ImageIcon("src/main/resources/images/381-3811230_client-people-business-customer-person-client-png-clipart.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
         } else if (text.contains("ModeAdministration")) {
             icon = new ImageIcon(new ImageIcon("src/main/resources/images/pngtree-capsule-and-pills-icon-picture-image_7988303.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
-        } else if (text.contains("ActivePrinciple")) {
+        } else if (text.contains("SubresponseOptions")) {
             icon = new ImageIcon(new ImageIcon("src/main/resources/images/9593134.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
         } else if (text.contains("UnitMeasurement")) {
             icon = new ImageIcon(new ImageIcon("src/main/resources/images/1589247.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
@@ -186,6 +190,7 @@ public class AdminForumController extends JFrame implements ActionListener {
     SurveySercive ss = new SurveyRepository();
     CategoriesCatalogService ccs = new CategoriesCatalogRepository();
     ResponseOptionsService rs = new ResponseOptionsRepository();
+    SubresponseOptionsService sop = new SubresponseOptionsRepository();
 //    UnitMeasurementService us = new UnitMeasurementRepository();
 //    ActivePrincipleService as = new ActivePrincipleRepository();
 //    ModeadministrationService ms = new ModeAdministrationRepository();
@@ -234,7 +239,11 @@ public class AdminForumController extends JFrame implements ActionListener {
 //            CreateModeadministrationUC cm = new CreateModeadministrationUC(ms);
 //            ModeAdministrationController mc = new ModeAdministrationController(cm);
 //            mc.createModeAdministration();
-        } else if (entity.equals("ActivePrinciple")) {
+        } else if (entity.equals("SubresponseOptions")) {
+            CreateSubresponseOptionsUC cso = new CreateSubresponseOptionsUC(sop);
+            ListSubresponseOptionsUC
+            //ERROR MAMAWEBO
+            // <3 con amor, yo y GPT
 //            CreateActivePrincipleUC ca = new CreateActivePrincipleUC(as);
 //            ActivePrincipleController ac = new ActivePrincipleController(ca);
 //            ac.CreateActivePrinciple();
