@@ -68,7 +68,7 @@ public class ResponseOptionsController {
         mapOfList = new LinkedHashMap<>();
 
         mapOfList.put("ResponseOptions", listOfResponseOption);
-        mapOfList.put("Category", listOfCategory);
+        mapOfList.put("CategoryCatalog", listOfCategory);
         mapOfList.put("Question", listOfQuestion);
         this.createController = new CreateController(responseOptions, createResponseOptionsUC, mapOfList);
     }

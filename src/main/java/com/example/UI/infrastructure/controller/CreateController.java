@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CreateController extends JFrame implements ActionListener {
     private GlobalService entity;
@@ -24,10 +25,12 @@ public class CreateController extends JFrame implements ActionListener {
     private JButton createButton;
     private Map<String, String> types;
     private List<Component> components = new ArrayList<>();
+    private Map<String,List<Object>> mapOfList;
 
     public CreateController(GlobalService entity, Object createService, Map<String, List<Object>> mapOfList) {
         this.entity = entity;
         this.createService = createService;
+        this.mapOfList = mapOfList;
 
         setTitle("Create " + entity.getClass().getSimpleName());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -102,7 +105,7 @@ public class CreateController extends JFrame implements ActionListener {
                         propertyName = "ChapterTitle";
                         break;
                     case "Question":
-                        propertyName = "QuestionText";
+                        propertyName = "CommentQuestion";
                         break;
                     case "ResponseOptions":
                         propertyName = "OptionText";
@@ -134,16 +137,22 @@ public class CreateController extends JFrame implements ActionListener {
     }
 
     private void saveEntity() {
-        int index = 0;
-        for (String propertyName : types.keySet()) {
+        AtomicInteger index = new AtomicInteger();
+        types.forEach((propertyName, v) -> {
             if (!Objects.equals(propertyName, "Id") && !Objects.equals(propertyName, "CreatedAt") && !Objects.equals(propertyName, "UpdatedAt")) {
                 System.out.println(propertyName);
                 try {
                     String type = types.get(propertyName);
-                    Component comp = components.get(index);
+                    Component comp = components.get(index.get());
                     Object value = null;
 
                     if (type.equals("JComboBox")) {
+                        mapOfList.forEach((key,val) -> {
+                            if (propertyName.contains(key)) {
+                                this.listService = val.get(0);
+                                this.findService = val.get(1);
+                            }
+                        });
                         JComboBox<?> comboBox = (JComboBox<?>) comp;
                         Object selectedItem = comboBox.getSelectedItem();
 
@@ -168,14 +177,30 @@ public class CreateController extends JFrame implements ActionListener {
 
                     PropertyDescriptor pd = new PropertyDescriptor(propertyName, entity.getClass());
                     Method setter = pd.getWriteMethod();
-                    setter.invoke(entity, value);
+
+                    Class<?>[] parameterTypes = setter.getParameterTypes();
+
+                    if (parameterTypes.length == 1) {
+                        Class<?> parameterType = parameterTypes[0];
+
+                        if (parameterType == int.class || parameterType == Integer.class) {
+                            if (value instanceof String) {
+                                value = Integer.parseInt((String) value);
+                            } else if (value instanceof Number) {
+                                value = ((Number) value).intValue();
+                            }
+                        }
+
+                        setter.invoke(entity, value);
+                    }
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                index++;
+                index.getAndIncrement();
             }
-        }
+
+        });
 
         try {
             Method createMethod = createService.getClass().getMethod("create", entity.getClass());
