@@ -20,10 +20,24 @@ public class CategoriesCatalogController {
     private DeleteCategoriesCatalogUC deleteCategoriesCatalogUC;
     Map<String, List<Object>> mapOfList;
 
-    public CategoriesCatalogController(CreateCategoriesCatalogUC createCategoriesCatalogUC) {
+    // Handle Create
+    public CategoriesCatalogController(CreateCategoriesCatalogUC createCategoriesCatalogUC, ListCategoriesCatalogsUC listCategoriesCatalogsUC, FindCategoriesCatalogByNameUC findCategoriesCatalogByNameUC) {
         this.createCategoriesCatalogUC = createCategoriesCatalogUC;
+        this.listCategoriesCatalogsUC = listCategoriesCatalogsUC;
+        this.findCategoriesCatalogByNameUC = findCategoriesCatalogByNameUC;
     }
 
+    // Handle List
+    public CategoriesCatalogController(ListCategoriesCatalogsUC listCategoriesCatalogsUC) {
+        this.listCategoriesCatalogsUC = listCategoriesCatalogsUC;
+    }
+
+    // Handle Search
+    public CategoriesCatalogController(FindCategoriesCatalogByIdUC findCategoriesCatalogByIdUC) {
+        this.findCategoriesCatalogByIdUC = findCategoriesCatalogByIdUC;
+    }
+
+    // Handle Update
     public CategoriesCatalogController(UpdateCategoriesCatalogUC updateCategoriesCatalogUC, ListCategoriesCatalogsUC listCategoriesCatalogsUC, FindCategoriesCatalogByNameUC findCategoriesCatalogByNameUC, FindCategoriesCatalogByIdUC findCategoriesCatalogByIdUC) {
         this.updateCategoriesCatalogUC = updateCategoriesCatalogUC;
         this.listCategoriesCatalogsUC = listCategoriesCatalogsUC;
@@ -36,14 +50,8 @@ public class CategoriesCatalogController {
         this.listCategoriesCatalogsUC = listCategoriesCatalogsUC;
         this.findCategoriesCatalogByNameUC = findCategoriesCatalogByNameUC;
     }
+    
 
-    public CategoriesCatalogController(ListCategoriesCatalogsUC listCategoriesCatalogsUC) {
-        this.listCategoriesCatalogsUC = listCategoriesCatalogsUC;
-    }
-
-    public CategoriesCatalogController(FindCategoriesCatalogByIdUC findCategoriesCatalogByIdUC) {
-        this.findCategoriesCatalogByIdUC = findCategoriesCatalogByIdUC;
-    }
 
     public void createCategoriesCatalog() {
         CategoriesCatalog categoriesCatalog = new CategoriesCatalog();

@@ -26,12 +26,24 @@ public class ChapterController {
     private DeleteChapterUC deleteChapterUC;
     Map<String, List<Object>> mapOfList;
 
+    // Handle Create
     public ChapterController(CreateChapterUC createChapterUC, ListSurveysUC listSurveysUC, FindSurveyByNameUC findSurveyByNameUC) {
         this.createChapterUC = createChapterUC;
         this.listSurveysUC = listSurveysUC;
         this.findSurveyByNameUC = findSurveyByNameUC;
     }
 
+    // Handle List
+    public ChapterController(ListChaptersUC listChaptersUC) {
+        this.listChaptersUC = listChaptersUC;
+    }
+    
+    // Handle Seach
+    public ChapterController(FindChapterByIdUC findChapterByIdUC) {
+        this.findChapterByIdUC = findChapterByIdUC;
+    }
+
+    // Handle Update
     public ChapterController(UpdateChapterUC updateChapterUC, ListChaptersUC listChaptersUC, ListSurveysUC listSurveysUC, FindChapterByNameUC findChapterByNameUC, FindSurveyByIdUC findSurveyByIdUC, FindSurveyByNameUC findSurveyByNameUC) {
         this.updateChapterUC = updateChapterUC;
         this.listChaptersUC = listChaptersUC;
@@ -47,13 +59,7 @@ public class ChapterController {
         this.findChapterByNameUC = findChapterByNameUC;
     }
 
-    public ChapterController(ListChaptersUC listChaptersUC) {
-        this.listChaptersUC = listChaptersUC;
-    }
 
-    public ChapterController(FindChapterByIdUC findChapterByIdUC) {
-        this.findChapterByIdUC = findChapterByIdUC;
-    }
 
     public void createChapter() {
         Chapter chapter = new Chapter();

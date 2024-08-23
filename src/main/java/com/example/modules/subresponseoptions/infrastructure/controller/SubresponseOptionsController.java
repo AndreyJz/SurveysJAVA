@@ -1,10 +1,25 @@
 package com.example.modules.subresponseoptions.infrastructure.controller;
 
-import com.example.UI.infrastructure.controller.*;
-import com.example.modules.subresponseoptions.application.*;
-import com.example.modules.subresponseoptions.domain.entity.SubresponseOptions;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-import java.util.*;
+import com.example.UI.infrastructure.controller.CreateController;
+import com.example.UI.infrastructure.controller.DeleteController;
+import com.example.UI.infrastructure.controller.ListController;
+import com.example.UI.infrastructure.controller.SearchController;
+import com.example.UI.infrastructure.controller.UpdateController;
+import com.example.modules.responseoptions.application.FindResponseOptionsByIdUC;
+import com.example.modules.responseoptions.application.FindResponseOptionsByNameUC;
+import com.example.modules.responseoptions.application.ListResponseOptionsUC;
+import com.example.modules.subresponseoptions.application.CreateSubresponseOptionsUC;
+import com.example.modules.subresponseoptions.application.DeleteSubresponseOptionsUC;
+import com.example.modules.subresponseoptions.application.FindSubresponseOptionsByIdUC;
+import com.example.modules.subresponseoptions.application.FindSubresponseOptionsBySubresponseTextUC;
+import com.example.modules.subresponseoptions.application.ListSubresponseOptionsUC;
+import com.example.modules.subresponseoptions.application.UpdateSubresponseOptionsUC;
+import com.example.modules.subresponseoptions.domain.entity.SubresponseOptions;
 
 public class SubresponseOptionsController {
     private CreateController createController;
@@ -17,16 +32,43 @@ public class SubresponseOptionsController {
     private DeleteSubresponseOptionsUC deleteSubresponseOptionsUC;
     private FindSubresponseOptionsByIdUC findSubresponseOptionsByIdUC;
     private ListSubresponseOptionsUC listSubresponseOptionsUC;
-
+    private FindResponseOptionsByNameUC findResponseOptionsByNameUC;
+    private ListResponseOptionsUC listResponseOptionsUC;
+    private FindResponseOptionsByIdUC findResponseOptionsByIdUC;
+    private FindSubresponseOptionsBySubresponseTextUC findSubresponseOptionsBySubresponseTextUC;
     Map<String, List<Object>> mapOfList;
-
-    public SubresponseOptionsController(CreateSubresponseOptionsUC createSubresponseOptionsUC, ListSubresponseOptionsUC listSubresponseOptionsUC) {
+    
+    // Handle Create
+    public SubresponseOptionsController(CreateSubresponseOptionsUC createSubresponseOptionsUC, ListResponseOptionsUC listResponseOptionsUC, FindResponseOptionsByNameUC findResponseOptionsByNameUC, ListSubresponseOptionsUC listSubresponseOptionsUC, FindSubresponseOptionsByIdUC findSubresponseOptionsByIdUC) {
         this.createSubresponseOptionsUC = createSubresponseOptionsUC;
+        this.listResponseOptionsUC = listResponseOptionsUC;
+        this.findResponseOptionsByNameUC = findResponseOptionsByNameUC;
+        this.listSubresponseOptionsUC = listSubresponseOptionsUC;
+        this.findSubresponseOptionsByIdUC = findSubresponseOptionsByIdUC;
+    }
+    
+    // Handle List
+    public SubresponseOptionsController(ListSubresponseOptionsUC listSubresponseOptionsUC) {
         this.listSubresponseOptionsUC = listSubresponseOptionsUC;
     }
+    
+    // Handle Search
+    public SubresponseOptionsController(FindSubresponseOptionsByIdUC findSubresponseOptionsByIdUC) {
+        this.findSubresponseOptionsByIdUC = findSubresponseOptionsByIdUC;
+    }
 
-    public SubresponseOptionsController(UpdateSubresponseOptionsUC updateSubresponseOptionsUC, ListSubresponseOptionsUC listSubresponseOptionsUC) {
+    // Handle Update
+    public SubresponseOptionsController(UpdateSubresponseOptionsUC updateSubresponseOptionsUC, ListSubresponseOptionsUC listSubresponseOptionsUC, ListResponseOptionsUC listResponseOptionsUC, FindSubresponseOptionsByIdUC findSubresponseOptionsByIdUC, FindSubresponseOptionsBySubresponseTextUC findSubresponseOptionsBySubresponseTextUC, FindResponseOptionsByIdUC findResponseOptionsByIdUC, FindResponseOptionsByNameUC findResponseOptionsByNameUC) {
         this.updateSubresponseOptionsUC = updateSubresponseOptionsUC;
+        this.listSubresponseOptionsUC = listSubresponseOptionsUC;
+        this.listResponseOptionsUC = listResponseOptionsUC;
+        this.findSubresponseOptionsByIdUC = findSubresponseOptionsByIdUC;
+        this.findSubresponseOptionsBySubresponseTextUC = findSubresponseOptionsBySubresponseTextUC;
+        this.findResponseOptionsByIdUC = findResponseOptionsByIdUC;
+        this.findResponseOptionsByNameUC = findResponseOptionsByNameUC;
+    }
+    public SubresponseOptionsController(CreateSubresponseOptionsUC createSubresponseOptionsUC, ListSubresponseOptionsUC listSubresponseOptionsUC) {
+        this.createSubresponseOptionsUC = createSubresponseOptionsUC;
         this.listSubresponseOptionsUC = listSubresponseOptionsUC;
     }
 
@@ -35,13 +77,7 @@ public class SubresponseOptionsController {
         this.listSubresponseOptionsUC = listSubresponseOptionsUC;
     }
 
-    public SubresponseOptionsController(ListSubresponseOptionsUC listSubresponseOptionsUC) {
-        this.listSubresponseOptionsUC = listSubresponseOptionsUC;
-    }
-
-    public SubresponseOptionsController(FindSubresponseOptionsByIdUC findSubresponseOptionsByIdUC) {
-        this.findSubresponseOptionsByIdUC = findSubresponseOptionsByIdUC;
-    }
+    
 
     public void createSubresponseOptions() {
         SubresponseOptions subresponseOptions = new SubresponseOptions();
