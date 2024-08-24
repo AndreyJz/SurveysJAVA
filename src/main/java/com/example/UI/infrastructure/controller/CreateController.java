@@ -98,6 +98,8 @@ public class CreateController extends JFrame implements ActionListener {
 
             String propertyName = "Name";
 
+            comboBox.addItem("");
+
             for (Object item : items) {
 
                 switch (item.getClass().getSimpleName()) {
@@ -156,15 +158,19 @@ public class CreateController extends JFrame implements ActionListener {
                         JComboBox<?> comboBox = (JComboBox<?>) comp;
                         Object selectedItem = comboBox.getSelectedItem();
 
-                        Method findMethod = findService.getClass().getMethod("find", String.class);
-                        Optional<?> result = (Optional<?>) findMethod.invoke(findService, selectedItem.toString());
+                        if (selectedItem != "") {
+                            Method findMethod = findService.getClass().getMethod("find", String.class);
+                            Optional<?> result = (Optional<?>) findMethod.invoke(findService, selectedItem.toString());
 
-                        if (result.isPresent()) {
-                            Object relatedEntity = result.get();
-                            Method getIdMethod = relatedEntity.getClass().getMethod("getId");
-                            value = getIdMethod.invoke(relatedEntity);
+                            if (result.isPresent()) {
+                                Object relatedEntity = result.get();
+                                Method getIdMethod = relatedEntity.getClass().getMethod("getId");
+                                value = getIdMethod.invoke(relatedEntity);
+                            } else {
+                                throw new SQLException("Related entity not found for " + selectedItem.toString());
+                            }
                         } else {
-                            throw new SQLException("Related entity not found for " + selectedItem.toString());
+                            value = 0;
                         }
 
                     } else if (type.equals("JDateChooser")) {
@@ -183,15 +189,20 @@ public class CreateController extends JFrame implements ActionListener {
                     if (parameterTypes.length == 1) {
                         Class<?> parameterType = parameterTypes[0];
 
+                        System.out.println(value);
                         if (parameterType == int.class || parameterType == Integer.class) {
                             if (value instanceof String) {
                                 value = Integer.parseInt((String) value);
                             } else if (value instanceof Number) {
                                 value = ((Number) value).intValue();
+                                setter.invoke(entity, value);
                             }
+                        } else if (value.equals("")) {
+                            value = null;
+                        } else {
+                            setter.invoke(entity, value);
                         }
 
-                        setter.invoke(entity, value);
                     }
 
                 } catch (Exception ex) {

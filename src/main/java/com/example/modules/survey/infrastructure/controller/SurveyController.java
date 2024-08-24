@@ -1,6 +1,7 @@
 package com.example.modules.survey.infrastructure.controller;
 
 import com.example.modules.chapter.domain.entity.Chapter;
+import com.example.modules.responseoptions.application.ListResponseOptionsByQuestionIdUC;
 import com.example.modules.survey.application.*;
 import com.example.modules.chapter.application.*;
 import com.example.modules.question.application.*;
@@ -21,6 +22,7 @@ public class SurveyController extends JFrame implements ActionListener {
     private ListSurveysUC listSurveysUC;
     private ListChapterBySurveyIdUC listChapterBySurveyIdUC;
     private ListQuestionsByChapterIdUC listQuestionsByChapterIdUC;
+    private ListResponseOptionsByQuestionIdUC listResponseOptionsByQuestionIdUC;
 
     private JPanel mainPanel;
     private JPanel contentPanel;
@@ -34,11 +36,12 @@ public class SurveyController extends JFrame implements ActionListener {
     private JComboBox<String> selectComboBox;
     private List<JPanel> chapterPanels;
 
-    public SurveyController(ListSurveysUC ls, FindSurveyByNameUC fs, ListChapterBySurveyIdUC lc, ListQuestionsByChapterIdUC lq) {
+    public SurveyController(ListSurveysUC ls, FindSurveyByNameUC fs, ListChapterBySurveyIdUC lc, ListQuestionsByChapterIdUC lq, ListResponseOptionsByQuestionIdUC lro) {
         this.listSurveysUC = ls;
         this.findSurveyByNameUC = fs;
         this.listChapterBySurveyIdUC = lc;
         this.listQuestionsByChapterIdUC = lq;
+        this.listResponseOptionsByQuestionIdUC = lro;
     }
 
     public void fillSurvey() {
@@ -102,9 +105,11 @@ public class SurveyController extends JFrame implements ActionListener {
     private void generateSurvey (int surveyId) {
         contentPanel = new JPanel();
         contentPanel.setBackground(new Color(0x123456));
-        contentPanel.setBounds(35, 60, 425, 470);
+        contentPanel.setLayout(new BorderLayout());
+        contentPanel.setBounds(25, 40, 450, 600);
 
-        chapter = new JPanel(new GridLayout(0, 1, 10, 10));
+        chapter = new JPanel();
+        chapter.setLayout(new BoxLayout(chapter, BoxLayout.Y_AXIS));
         chapter.setBackground(new Color(0x123456));
         List<Chapter> chapters = listChapterBySurveyIdUC.list(surveyId);
         chapters.forEach(chapter -> {
@@ -112,15 +117,27 @@ public class SurveyController extends JFrame implements ActionListener {
             generateChapter(title,chapter.getId());
         });
 
+        contentPanel.add(chapter, BorderLayout.CENTER);
+
+        JScrollPane scrollPane = new JScrollPane(chapter);
+//        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+//        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        contentPanel.add(scrollPane, BorderLayout.CENTER);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(new Color(0x123456));
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
         sendButton = new JButton("Send");
         sendButton.addActionListener(this);
         cancelButton = new JButton("Exit");
         cancelButton.addActionListener(this);
 
+        buttonPanel.add(sendButton);
+        buttonPanel.add(cancelButton);
 
-        contentPanel.add(chapter);
-        contentPanel.add(cancelButton);
-        contentPanel.add(sendButton);
+        contentPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         contentPanel.setVisible(true);
         add(contentPanel);
@@ -128,6 +145,8 @@ public class SurveyController extends JFrame implements ActionListener {
 
     public void generateChapter(String title,int chapterId) {
         JPanel content = new JPanel();
+        content.setLayout(new GridLayout(0,1,8,8));
+        content.setBackground(new Color(0x123456));
 
         // Create the header with the toggle button
         chapterPanels = new ArrayList<>();
@@ -140,30 +159,37 @@ public class SurveyController extends JFrame implements ActionListener {
         sectionPanel.add(content);
         sectionPanel.setVisible(true);
 
+        content.setBounds(sectionPanel.getX(), sectionPanel.getY(), sectionPanel.getWidth(), sectionPanel.getHeight());
         chapter.add(sectionPanel);
 
         chapterPanels.add(content);
 
-        generateInfo(content,chapterId);
+        generateQuestion(content,chapterId);
 
-        content.setVisible(false);
+        content.setVisible(true);
         toggleButton.addActionListener(new ToggleAction(content));
 
     }
 
-    public void generateInfo(JPanel content, int chapterId) {
+    public void generateQuestion(JPanel content, int chapterId) {
         listQuestionsByChapterIdUC.list(chapterId).forEach(question -> {
             JLabel questionLabel = new JLabel("Q" + question.getQuestionNumber() + ": " + question.getQuestionText());
+            questionLabel.setForeground(new Color(236, 224, 220));
             content.add(questionLabel);
             if (question.getResponseType().equals("radio")) {
-
-                JRadioButton response = new JRadioButton();
-                content.add(response);
+                listResponseOptionsByQuestionIdUC.list(question.getId()).forEach(responseOption -> {
+                    JRadioButton response = new JRadioButton(responseOption.getOptionText() + ".");
+                    response.setBackground(new Color(0x123456));
+                    response.setForeground(new Color(236, 224, 220));
+                    content.add(response);
+                });
             } else {
                 JTextField response = new JTextField();
                 content.add(response);
             }
         });
+        JLabel empty = new JLabel("");
+        content.add(empty);
     }
 
     private class ToggleAction implements ActionListener {

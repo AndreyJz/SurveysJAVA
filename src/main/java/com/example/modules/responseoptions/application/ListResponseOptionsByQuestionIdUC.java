@@ -5,14 +5,14 @@ import com.example.modules.responseoptions.domain.service.ResponseOptionsService
 
 import java.util.List;
 
-public class FindResponseOptionsByCategoryCatalogIdUC {
+public class ListResponseOptionsByQuestionIdUC {
     private final ResponseOptionsService responseOptionsService;
 
-    public FindResponseOptionsByCategoryCatalogIdUC(ResponseOptionsService responseOptionsService) {
+    public ListResponseOptionsByQuestionIdUC(ResponseOptionsService responseOptionsService) {
         this.responseOptionsService = responseOptionsService;
     }
 
-    public List<ResponseOptions> find(int categoryCatalogId) {
-        return this.responseOptionsService.findResponseOptionsByCategoryCatalogId(categoryCatalogId);
+    public List<ResponseOptions> list(int questionId) {
+        return this.responseOptionsService.listResponseOptionsByQuestionId(questionId);
     }
 }

@@ -32,7 +32,11 @@ public class ResponseOptionsRepository implements ResponseOptionsService {
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, responseOptions.getOptionValue());
             ps.setInt(2, responseOptions.getCategoryCatalogId());
-            ps.setInt(3, responseOptions.getParentResponseId());
+            if (responseOptions.getParentResponseId() == 0) {
+                ps.setNull(3, Types.INTEGER);
+            } else {
+                ps.setInt(3, responseOptions.getParentResponseId());
+            }
             ps.setInt(4, responseOptions.getQuestionId());
             ps.setString(5, responseOptions.getTypeComponentHtml());
             ps.setString(6, responseOptions.getCommentResponse());
@@ -166,29 +170,58 @@ public class ResponseOptionsRepository implements ResponseOptionsService {
     }
 
     @Override
-    public List<ResponseOptions> findResponseOptionsByCategoryCatalogId(int Id) {
-        String query = "SELECT * FROM response_options WHERE categorycatalog_id = ?";
+    public List<ResponseOptions> listResponseOptionsByQuestionId(int Id) {
+        String query = "SELECT * FROM response_options WHERE question_id = ?";
+        List<ResponseOptions> responseOptionsList = new ArrayList<>();
         try {
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setInt(1, Id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                ResponseOptions responseOptions = new ResponseOptions();
-                responseOptions.setId(rs.getInt("id"));
-                responseOptions.setOptionValue(rs.getInt("option_value"));
-                responseOptions.setCategoryCatalogId(rs.getInt("categorycatalog_id"));
-                responseOptions.setCreatedAt(rs.getTimestamp("created_at"));
-                responseOptions.setUpdatedAt(rs.getTimestamp("updated_at"));
-                responseOptions.setParentResponseId(rs.getInt("parentresponse_id"));
-                responseOptions.setQuestionId(rs.getInt("question_id"));
-                responseOptions.setTypeComponentHtml(rs.getString("typecomponenthtml"));
-                responseOptions.setCommentResponse(rs.getString("comment_response"));
-                responseOptions.setOptionText(rs.getString("option_text"));
-                return List.of(responseOptions);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ResponseOptions responseOptions = new ResponseOptions();
+                    responseOptions.setId(rs.getInt("id"));
+                    responseOptions.setOptionValue(rs.getInt("option_value"));
+                    responseOptions.setCategoryCatalogId(rs.getInt("categorycatalog_id"));
+                    responseOptions.setCreatedAt(rs.getTimestamp("created_at"));
+                    responseOptions.setUpdatedAt(rs.getTimestamp("updated_at"));
+                    responseOptions.setParentResponseId(rs.getInt("parentresponse_id"));
+                    responseOptions.setQuestionId(rs.getInt("question_id"));
+                    responseOptions.setTypeComponentHtml(rs.getString("typecomponenthtml"));
+                    responseOptions.setCommentResponse(rs.getString("comment_response"));
+                    responseOptions.setOptionText(rs.getString("option_text"));
+                    responseOptionsList.add(responseOptions);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return responseOptionsList;
     }
+
+//    @Override
+//    public List<ResponseOptions> listResponseOptionsByQuestionId(int Id) {
+//        String query = "SELECT * FROM response_options WHERE categorycatalog_id = ?";
+//        try {
+//            PreparedStatement ps = connection.prepareStatement(query);
+//            ps.setInt(1, Id);
+//            ResultSet rs = ps.executeQuery();
+//            if (rs.next()) {
+//                ResponseOptions responseOptions = new ResponseOptions();
+//                responseOptions.setId(rs.getInt("id"));
+//                responseOptions.setOptionValue(rs.getInt("option_value"));
+//                responseOptions.setCategoryCatalogId(rs.getInt("categorycatalog_id"));
+//                responseOptions.setCreatedAt(rs.getTimestamp("created_at"));
+//                responseOptions.setUpdatedAt(rs.getTimestamp("updated_at"));
+//                responseOptions.setParentResponseId(rs.getInt("parentresponse_id"));
+//                responseOptions.setQuestionId(rs.getInt("question_id"));
+//                responseOptions.setTypeComponentHtml(rs.getString("typecomponenthtml"));
+//                responseOptions.setCommentResponse(rs.getString("comment_response"));
+//                responseOptions.setOptionText(rs.getString("option_text"));
+//                return List.of(responseOptions);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 }
