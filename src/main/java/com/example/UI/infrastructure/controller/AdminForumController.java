@@ -5,6 +5,7 @@ import com.example.modules.chapter.domain.service.ChapterService;
 import com.example.modules.chapter.infrastructure.controller.ChapterController;
 import com.example.modules.chapter.infrastructure.repository.ChapterRepository;
 import com.example.modules.question.application.CreateQuestionUC;
+import com.example.modules.question.application.DeleteQuestionUC;
 import com.example.modules.question.application.FindQuestionByIdUC;
 import com.example.modules.question.application.FindQuestionByNameUC;
 import com.example.modules.question.application.ListQuestionsUC;
@@ -21,7 +22,18 @@ import com.example.modules.responseoptions.application.UpdateResponseOptionsUC;
 import com.example.modules.responseoptions.domain.service.ResponseOptionsService;
 import com.example.modules.responseoptions.infrastructure.controller.ResponseOptionsController;
 import com.example.modules.responseoptions.infrastructure.repository.ResponseOptionsRepository;
-import com.example.modules.survey.application.*;
+import com.example.modules.responsequestions.application.CreateResponseQuestionUC;
+import com.example.modules.responsequestions.application.DeleteResponseQuestionUC;
+import com.example.modules.responsequestions.application.FindResponseQuestionByIdUC;
+import com.example.modules.responsequestions.application.FindResponseQuestionByNameUC;
+import com.example.modules.responsequestions.application.ListResponseQuestionsUC;
+import com.example.modules.responsequestions.application.UpdateResponseQuestionUC;
+import com.example.modules.responsequestions.domain.service.ResponseQuestionService;
+import com.example.modules.responsequestions.infrastructure.controller.ResponseQuestionController;
+import com.example.modules.responsequestions.infrastructure.repository.ResponseQuestionRepository;
+import com.example.modules.survey.application.FindSurveyByIdUC;
+import com.example.modules.survey.application.FindSurveyByNameUC;
+import com.example.modules.survey.application.ListSurveysUC;
 import com.example.modules.survey.domain.service.SurveySercive;
 import com.example.modules.survey.infrastructure.controller.SurveyController;
 import com.example.modules.survey.infrastructure.repository.SurveyRepository;
@@ -29,6 +41,7 @@ import com.example.modules.categoriescatalog.application.FindCategoriesCatalogBy
 import com.example.modules.categoriescatalog.application.ListCategoriesCatalogsUC;
 import com.example.modules.categoriescatalog.application.UpdateCategoriesCatalogUC;
 import com.example.modules.categoriescatalog.application.CreateCategoriesCatalogUC;
+import com.example.modules.categoriescatalog.application.DeleteCategoriesCatalogUC;
 import com.example.modules.categoriescatalog.application.FindCategoriesCatalogByIdUC;
 import com.example.modules.categoriescatalog.domain.service.CategoriesCatalogService;
 import com.example.modules.categoriescatalog.infrastructure.controller.CategoriesCatalogController;
@@ -89,14 +102,14 @@ public class AdminForumController extends JFrame implements ActionListener {
     }
 
     private void initializeMainPanel() {
-        String[] mainOptions = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "SubresponseOptions"};
+        String[] mainOptions = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "ModeAdministration", "SubresponseOptions", "ResponseQuestion"};
         for (String option : mainOptions) {
             addButton(mainMenuPanel, option, this);
         }
     }
 
     private void initializeSubPanels() {
-        String[] entities = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "SubresponseOptions"};
+        String[] entities = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "ModeAdministration", "SubresponseOptions", "ResponseQuestion"};
         for (String entity : entities) {
             JPanel panel = new JPanel(new GridLayout(6, 1, 10, 10));
             addEntityButtons(panel, entity);
@@ -196,6 +209,7 @@ public class AdminForumController extends JFrame implements ActionListener {
     CategoriesCatalogService ccs = new CategoriesCatalogRepository();
     ResponseOptionsService rs = new ResponseOptionsRepository();
     SubresponseOptionsService sop = new SubresponseOptionsRepository();
+    ResponseQuestionService rqs = new ResponseQuestionRepository();
 
     private void handleCreate(String entity) {
         // TODO, survey create
@@ -237,6 +251,16 @@ public class AdminForumController extends JFrame implements ActionListener {
             FindSubresponseOptionsByIdUC fs = new FindSubresponseOptionsByIdUC(sop);
             SubresponseOptionsController cc = new SubresponseOptionsController(cso, lr, fr, ls, fs);
             cc.createSubresponseOptions();
+        } else if (entity.equals("ResponseQuestion")) {
+            CreateResponseQuestionUC crq = new CreateResponseQuestionUC(rqs);
+            ListResponseQuestionsUC lrq = new ListResponseQuestionsUC(rqs);
+            FindResponseQuestionByNameUC frqn = new FindResponseQuestionByNameUC(rqs);
+            ListResponseOptionsUC lro = new ListResponseOptionsUC(rs);
+            FindResponseOptionsByNameUC fron = new FindResponseOptionsByNameUC(rs);
+            ListSubresponseOptionsUC lso = new ListSubresponseOptionsUC(sop);
+            FindSubresponseOptionsBySubresponseTextUC fson = new FindSubresponseOptionsBySubresponseTextUC(sop);
+            ResponseQuestionController cc = new ResponseQuestionController(crq, lrq, frqn, lro, fron, lso, fson);
+            cc.createResponseQuestion();
         }
     }
 
@@ -266,6 +290,10 @@ public class AdminForumController extends JFrame implements ActionListener {
             ListSubresponseOptionsUC lso = new ListSubresponseOptionsUC(sop);
             SubresponseOptionsController cc = new SubresponseOptionsController(lso);
             cc.listSubresponseOptions();
+        } else if (entity.equals("ResponseQuestion")) {
+            ListResponseQuestionsUC lrq = new ListResponseQuestionsUC(rqs);
+            ResponseQuestionController c = new ResponseQuestionController(lrq);
+            c.listResponseQuestions();
         }
     }
 
@@ -295,6 +323,10 @@ public class AdminForumController extends JFrame implements ActionListener {
             FindSubresponseOptionsByIdUC fso = new FindSubresponseOptionsByIdUC(sop);
             SubresponseOptionsController cc = new SubresponseOptionsController(fso);
             cc.findSubresponseOptionsById();
+        } else if (entity.equals("ResponseQuestion")) {
+            FindResponseQuestionByIdUC frqi = new FindResponseQuestionByIdUC(rqs);
+            ResponseQuestionController c = new ResponseQuestionController(frqi);
+            c.findResponseQuestionById();
         }
     }
 
@@ -355,11 +387,21 @@ public class AdminForumController extends JFrame implements ActionListener {
             FindResponseOptionsByNameUC fron = new FindResponseOptionsByNameUC(rs);
             SubresponseOptionsController cccc = new SubresponseOptionsController(uso, lso, lro, fsoi, fson, froi, fron);
             cccc.updateSubresponseOptions();
-            
+        } else if (entity.equals("ResponseQuestion")) {
+            UpdateResponseQuestionUC drq = new UpdateResponseQuestionUC(rqs);
+            ListResponseQuestionsUC lrq = new ListResponseQuestionsUC(rqs);
+            FindResponseQuestionByNameUC frqn = new FindResponseQuestionByNameUC(rqs);
+            ListResponseOptionsUC lro = new ListResponseOptionsUC(rs);
+            FindResponseOptionsByNameUC fron = new FindResponseOptionsByNameUC(rs);
+            ListSubresponseOptionsUC lso = new ListSubresponseOptionsUC(sop);
+            FindSubresponseOptionsBySubresponseTextUC fson = new FindSubresponseOptionsBySubresponseTextUC(sop);
+            ResponseQuestionController cc = new ResponseQuestionController(drq, lrq, frqn, lro, fron, lso, fson);
+            cc.updateResponseQuestion();
         }
     }
 
     private void handleDelete(String entity) {
+        // TODO, survey create
         if (entity.equals("Survey")) {
             DeleteSurveyUC ds = new DeleteSurveyUC(ss);
             ListSurveysUC lss = new ListSurveysUC(ss);
@@ -367,68 +409,41 @@ public class AdminForumController extends JFrame implements ActionListener {
             SurveyController ccc = new SurveyController(ds, lss, fsn);
             ccc.deleteSurvey();
         } else if (entity.equals("Chapter")) {
-            DeleteChapterUC deleteChapterUC = new DeleteChapterUC(cs);
-            ListChaptersUC listChaptersUC = new ListChaptersUC(cs);
-            FindChapterByNameUC findChapterByNameUC = new FindChapterByNameUC(cs);
-            ChapterController cc = new ChapterController(deleteChapterUC, listChaptersUC, findChapterByNameUC);
-            cc.deleteChapter();
+            DeleteChapterUC dc = new DeleteChapterUC(cs);
+            ListChaptersUC ls = new ListChaptersUC(cs);
+            FindChapterByNameUC fci = new FindChapterByNameUC(cs);
+            ChapterController ccc = new ChapterController(dc,ls,fci);
+            ccc.deleteChapter();
         } else if (entity.equals("Question")) {
-//            DeleteQuestionUC dr = new DeleteQuestionUC(qs);
-//            FindQuestionByNameUC fr = new FindQuestionByNameUC(qs);
-//            ListQuestionsUC lac = new ListQuestionsUC(qs);
-//            QuestionController rc = new QuestionController(dr,fr,lac);
-//            rc.deleteQuestion();
-        } else if (entity.equals("Laboratory")) {
-//            DeleteLaboratoryUC dl = new DeleteLaboratoryUC(ls);
-//            FindLaboratoriesUC fl = new FindLaboratoriesUC(ls);
-//            FindLaboratoryByNameUC fln = new FindLaboratoryByNameUC(ls);
-//            LaboratoryController lc = new LaboratoryController(dl,fl,fln);
-//            lc.deleteLaboratory();
+            DeleteQuestionUC dq = new DeleteQuestionUC(qs);
+            ListChaptersUC lc = new ListChaptersUC(cs);
+            FindChapterByNameUC fc = new FindChapterByNameUC(cs);
+            QuestionController c = new QuestionController(dq,lc,fc);
+            c.deleteQuestion();
+        } else if (entity.equals("CategoriesCatalog")) {
+            DeleteCategoriesCatalogUC dcat = new DeleteCategoriesCatalogUC(ccs);
+            ListCategoriesCatalogsUC lcc = new ListCategoriesCatalogsUC(ccs);
+            FindCategoriesCatalogByNameUC fcc = new FindCategoriesCatalogByNameUC(ccs);
+            CategoriesCatalogController ccc = new CategoriesCatalogController(dcat, lcc, fcc);
+            ccc.deleteCategoriesCatalog();
         } else if (entity.equals("ResponseOptions")) {
             DeleteResponseOptionsUC dr = new DeleteResponseOptionsUC(rs);
             ListResponseOptionsUC lr = new ListResponseOptionsUC(rs);
             FindResponseOptionsByNameUC fr = new FindResponseOptionsByNameUC(rs);
             ResponseOptionsController cc = new ResponseOptionsController(dr,lr,fr);
             cc.deleteResponseOptions();
-        } else if (entity.equals("ModeAdministration")) {
-//            ModeadministrationService ms = new ModeAdministrationRepository();
-//            ListModeadministrationsUC fcsuc = new ListModeadministrationsUC(ms);
-//            FindModeadministrationByNameUC fciduc = new FindModeadministrationByNameUC(ms);
-//            DeleteModeadministrationUC dcuc = new DeleteModeadministrationUC(ms);
-//            ModeAdministrationController uiSurvey = new ModeAdministrationController(dcuc, fciduc, fcsuc);
-//            uiSurvey.deleteModeAdministration();
-        } else if (entity.equals("ActivePrinciple")) {
-//            DeleteActivePrincipleUC da = new DeleteActivePrincipleUC(as);
-//            FindActivePrinciplesUC fa = new FindActivePrinciplesUC(as);
-//            FindActivePrincipleByNameUC fan = new FindActivePrincipleByNameUC(as);
-//            ActivePrincipleController ac = new ActivePrincipleController(da,fa,fan);
-//            ac.DeleteActivePrinciple();
-        } else if (entity.equals("UnitMeasurement")) {
-//            DeleteUnitMeasurementUC du = new DeleteUnitMeasurementUC(us);
-//            ListUnitMeasurementsUC lu = new ListUnitMeasurementsUC(us);
-//            FindUnitMeasurementByNameUC fu = new FindUnitMeasurementByNameUC(us);
-//            UnitMeasurementController uc = new UnitMeasurementController(du,lu,fu);
-//            uc.deleteUnitMeasurement();
-        } else if (entity.equals("Farmacy")) {
-//            DeleteFarmacyUC dcuc = new DeleteFarmacyUC(fs);
-//            ListAllFarmaciesUC fcsuc = new ListAllFarmaciesUC(fs);
-//            FindFarmacyByNameUC fciduc = new FindFarmacyByNameUC(fs);
-//            FarmacyController c = new FarmacyController(dcuc, fcsuc, fciduc);
-//            c.deleteFarmacy();
-        } else if (entity.equals("Medicine")) {
-//            DeleteMedicineUC dm = new DeleteMedicineUC(mss);
-//            ListMedicinesUC fcsuc = new ListMedicinesUC(mss);
-//            FindMedicineByNameUC fcn = new FindMedicineByNameUC(mss);
-//            MedicineController c = new MedicineController(dm,fcsuc,fcn);
-//            c.deleteMedicine();
-        } else if (entity.equals("Farmacy-Medicine")) {
-//            DeleteFarmacyMedicineUC dfm = new DeleteFarmacyMedicineUC(fms);
-//            ListAllFarmaciesUC lf = new ListAllFarmaciesUC(fs);
-//            ListMedicinesUC lm = new ListMedicinesUC(mss);
-//            FindFarmacyByNameUC ffn = new FindFarmacyByNameUC(fs);
-//            FindMedicineByNameUC fmn = new FindMedicineByNameUC(mss);
-//            FarmacyMedicineController c = new FarmacyMedicineController(dfm,lf,lm,ffn,fmn);
-//            c.deleteFarmacyMedicine();
+        } else if (entity.equals("SubresponseOptions")) {
+            DeleteSubresponseOptionsUC dso = new DeleteSubresponseOptionsUC(sop);
+            ListSubresponseOptionsUC ls = new ListSubresponseOptionsUC(sop);
+            FindSubresponseOptionsByIdUC fs = new FindSubresponseOptionsByIdUC(sop);
+            SubresponseOptionsController cc = new SubresponseOptionsController(dso, ls, fs);
+            cc.deleteSubresponseOptions();
+        } else if (entity.equals("ResponseQuestion")) {
+            DeleteResponseQuestionUC drq = new DeleteResponseQuestionUC(rqs);
+            ListResponseQuestionsUC lrq = new ListResponseQuestionsUC(rqs);
+            FindResponseQuestionByNameUC frqn = new FindResponseQuestionByNameUC(rqs);
+            ResponseQuestionController c = new ResponseQuestionController(drq, lrq, frqn);
+            c.deleteResponseQuestion();
         }
     }
 }

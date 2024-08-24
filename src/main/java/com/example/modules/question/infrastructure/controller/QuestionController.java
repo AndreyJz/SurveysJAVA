@@ -3,6 +3,7 @@ package com.example.modules.question.infrastructure.controller;
 import com.example.modules.question.application.*;
 import com.example.modules.chapter.application.*;
 import com.example.UI.infrastructure.controller.CreateController;
+import com.example.UI.infrastructure.controller.DeleteController;
 import com.example.UI.infrastructure.controller.ListController;
 import com.example.UI.infrastructure.controller.SearchController;
 import com.example.UI.infrastructure.controller.UpdateController;
@@ -27,6 +28,8 @@ public class QuestionController {
     private FindQuestionByIdUC findQuestionByIdUC;
     private UpdateQuestionUC updateQuestionUC;
     private UpdateController updateController;
+    private DeleteQuestionUC deleteQuestionUC;
+    private DeleteController deleteController;
 
     // Handle Create
     public QuestionController(CreateQuestionUC createQuestionUC, ListChaptersUC listChaptersUC, FindChapterByNameUC findChapterByNameUC) {
@@ -55,6 +58,13 @@ public class QuestionController {
         this.findChapterByNameUC = findChapterByNameUC;
     }
 
+    // Handle Delete
+    public QuestionController(DeleteQuestionUC deleteQuestionUC, ListChaptersUC listChaptersUC, FindChapterByNameUC findChapterByNameUC) {
+        this.deleteQuestionUC = deleteQuestionUC;
+        this.listChaptersUC = listChaptersUC;
+        this.findChapterByNameUC = findChapterByNameUC;
+    }
+
     public void createQuestion() {
         Question question = new Question();
         List<Object> listOfChapters = Arrays.asList(listChaptersUC,findChapterByNameUC);
@@ -73,6 +83,12 @@ public class QuestionController {
         mapOfList.put("Chapter", listOfChapters);
         mapOfList.put("Question", listOfQuestions);
         this.updateController = new UpdateController(question, updateQuestionUC, listOfChapters, listOfQuestions, mapOfList);
+    }
+
+    public void deleteQuestion() {
+        Question question = new Question();
+        this.deleteController = new DeleteController(question, deleteQuestionUC, listQuestionsUC, findQuestionByNameUC);
+
     }
     
     public void listQuestions() {

@@ -72,9 +72,10 @@ public class SubresponseOptionsController {
         this.listSubresponseOptionsUC = listSubresponseOptionsUC;
     }
 
-    public SubresponseOptionsController(DeleteSubresponseOptionsUC deleteSubresponseOptionsUC, ListSubresponseOptionsUC listSubresponseOptionsUC) {
+    public SubresponseOptionsController(DeleteSubresponseOptionsUC deleteSubresponseOptionsUC, ListSubresponseOptionsUC listSubresponseOptionsUC, FindSubresponseOptionsByIdUC findSubresponseOptionsByIdUC) {
         this.deleteSubresponseOptionsUC = deleteSubresponseOptionsUC;
         this.listSubresponseOptionsUC = listSubresponseOptionsUC;
+        this.findSubresponseOptionsByIdUC = findSubresponseOptionsByIdUC;
     }
 
     

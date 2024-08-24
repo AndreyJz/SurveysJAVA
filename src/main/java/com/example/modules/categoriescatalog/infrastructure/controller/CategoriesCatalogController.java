@@ -43,6 +43,7 @@ public class CategoriesCatalogController {
         this.findCategoriesCatalogByIdUC = findCategoriesCatalogByIdUC;
     }
 
+    // Handle Delete
     public CategoriesCatalogController(DeleteCategoriesCatalogUC deleteCategoriesCatalogUC, ListCategoriesCatalogsUC listCategoriesCatalogsUC, FindCategoriesCatalogByNameUC findCategoriesCatalogByNameUC) {
         this.deleteCategoriesCatalogUC = deleteCategoriesCatalogUC;
         this.listCategoriesCatalogsUC = listCategoriesCatalogsUC;
