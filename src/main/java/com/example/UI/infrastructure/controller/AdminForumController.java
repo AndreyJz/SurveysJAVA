@@ -31,9 +31,12 @@ import com.example.modules.responsequestions.application.UpdateResponseQuestionU
 import com.example.modules.responsequestions.domain.service.ResponseQuestionService;
 import com.example.modules.responsequestions.infrastructure.controller.ResponseQuestionController;
 import com.example.modules.responsequestions.infrastructure.repository.ResponseQuestionRepository;
+import com.example.modules.survey.application.CreateSurveyUC;
+import com.example.modules.survey.application.DeleteSurveyUC;
 import com.example.modules.survey.application.FindSurveyByIdUC;
 import com.example.modules.survey.application.FindSurveyByNameUC;
 import com.example.modules.survey.application.ListSurveysUC;
+import com.example.modules.survey.application.UpdateSurveyUC;
 import com.example.modules.survey.domain.service.SurveySercive;
 import com.example.modules.survey.infrastructure.controller.SurveyController;
 import com.example.modules.survey.infrastructure.repository.SurveyRepository;
@@ -102,14 +105,14 @@ public class AdminForumController extends JFrame implements ActionListener {
     }
 
     private void initializeMainPanel() {
-        String[] mainOptions = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "ModeAdministration", "SubresponseOptions", "ResponseQuestion"};
+        String[] mainOptions = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "SubresponseOptions", "ResponseQuestion"};
         for (String option : mainOptions) {
             addButton(mainMenuPanel, option, this);
         }
     }
 
     private void initializeSubPanels() {
-        String[] entities = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "ModeAdministration", "SubresponseOptions", "ResponseQuestion"};
+        String[] entities = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "SubresponseOptions", "ResponseQuestion"};
         for (String entity : entities) {
             JPanel panel = new JPanel(new GridLayout(6, 1, 10, 10));
             addEntityButtons(panel, entity);
