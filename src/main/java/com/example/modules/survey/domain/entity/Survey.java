@@ -1,8 +1,12 @@
 package com.example.modules.survey.domain.entity;
 
-import java.sql.Date;
+import com.example.UI.domain.service.GlobalService;
 
-public class Survey {
+import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Survey implements GlobalService {
     private int id;
     private Date createdAt;
     private Date updatedAt;
@@ -52,5 +56,16 @@ public class Survey {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public Map<String, String> getTypes() {
+        Map<String, String> types = new HashMap<>();
+        types.put("Id", "Null");
+        types.put("CreatedAt", "Null");
+        types.put("UpdatedAt", "Null");
+        types.put("Description", "TextField");
+        types.put("Name", "TextField");
+        return types;
     }
 }

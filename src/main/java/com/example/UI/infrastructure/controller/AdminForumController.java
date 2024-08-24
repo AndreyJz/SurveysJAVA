@@ -21,10 +21,9 @@ import com.example.modules.responseoptions.application.UpdateResponseOptionsUC;
 import com.example.modules.responseoptions.domain.service.ResponseOptionsService;
 import com.example.modules.responseoptions.infrastructure.controller.ResponseOptionsController;
 import com.example.modules.responseoptions.infrastructure.repository.ResponseOptionsRepository;
-import com.example.modules.survey.application.FindSurveyByIdUC;
-import com.example.modules.survey.application.FindSurveyByNameUC;
-import com.example.modules.survey.application.ListSurveysUC;
+import com.example.modules.survey.application.*;
 import com.example.modules.survey.domain.service.SurveySercive;
+import com.example.modules.survey.infrastructure.controller.SurveyController;
 import com.example.modules.survey.infrastructure.repository.SurveyRepository;
 import com.example.modules.categoriescatalog.application.FindCategoriesCatalogByNameUC;
 import com.example.modules.categoriescatalog.application.ListCategoriesCatalogsUC;
@@ -90,14 +89,14 @@ public class AdminForumController extends JFrame implements ActionListener {
     }
 
     private void initializeMainPanel() {
-        String[] mainOptions = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "ModeAdministration", "SubresponseOptions", "UnitMeasurement", "Farmacy", "Medicine", "Farmacy-Medicine"};
+        String[] mainOptions = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "SubresponseOptions"};
         for (String option : mainOptions) {
             addButton(mainMenuPanel, option, this);
         }
     }
 
     private void initializeSubPanels() {
-        String[] entities = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "ModeAdministration", "SubresponseOptions", "UnitMeasurement", "Farmacy", "Medicine", "Farmacy-Medicine"};
+        String[] entities = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "SubresponseOptions"};
         for (String entity : entities) {
             JPanel panel = new JPanel(new GridLayout(6, 1, 10, 10));
             addEntityButtons(panel, entity);
@@ -201,9 +200,9 @@ public class AdminForumController extends JFrame implements ActionListener {
     private void handleCreate(String entity) {
         // TODO, survey create
         if (entity.equals("Survey")) {
-//            CreateSurveyUC cc = new CreateSurveyUC(ccs);
-//            SurveyController ccc = new SurveyController(cc);
-//            ccc.CreateSurvey();
+            CreateSurveyUC cc = new CreateSurveyUC(ss);
+            SurveyController ccc = new SurveyController(cc);
+            ccc.createSurvey();
         } else if (entity.equals("Chapter")) {
             CreateChapterUC cc = new CreateChapterUC(cs);
             ListSurveysUC ls = new ListSurveysUC(ss);
@@ -218,9 +217,7 @@ public class AdminForumController extends JFrame implements ActionListener {
             c.createQuestion();
         } else if (entity.equals("CategoriesCatalog")) {
             CreateCategoriesCatalogUC ccat = new CreateCategoriesCatalogUC(ccs);
-            ListCategoriesCatalogsUC lcc = new ListCategoriesCatalogsUC(ccs);
-            FindCategoriesCatalogByNameUC fcc = new FindCategoriesCatalogByNameUC(ccs);
-            CategoriesCatalogController ccc = new CategoriesCatalogController(ccat, lcc, fcc);
+            CategoriesCatalogController ccc = new CategoriesCatalogController(ccat);
             ccc.createCategoriesCatalog();
         } else if (entity.equals("ResponseOptions")) {
             CreateResponseOptionsUC cr = new CreateResponseOptionsUC(rs);
@@ -246,9 +243,9 @@ public class AdminForumController extends JFrame implements ActionListener {
     private void handleList(String entity) {
         // TODO, Survey list
         if (entity.equals("Survey")) {
-//            CreateSurveyUC cc = new CreateSurveyUC(ccs);
-//            SurveyController ccc = new SurveyController(cc);
-//            ccc.CreateSurvey();
+            ListSurveysUC ls = new ListSurveysUC(ss);
+            SurveyController ccc = new SurveyController(ls);
+            ccc.listSurveys();
         } else if (entity.equals("Chapter")) {
             ListChaptersUC lc = new ListChaptersUC(cs);
             ChapterController ccc = new ChapterController(lc);
@@ -275,35 +272,41 @@ public class AdminForumController extends JFrame implements ActionListener {
     private void handleSearch(String entity) {
         // TODO, Survey Search
         if (entity.equals("Survey")) {
-//            CreateSurveyUC cc = new CreateSurveyUC(ccs);
-//            SurveyController ccc = new SurveyController(cc);
-//            ccc.CreateSurvey();
+            FindSurveyByIdUC fs = new FindSurveyByIdUC(ss);
+            SurveyController ccc = new SurveyController(fs);
+            ccc.findSurveyByID();
         } else if (entity.equals("Chapter")) {
             FindChapterByIdUC fc = new FindChapterByIdUC(cs);
             ChapterController ccc = new ChapterController(fc);
-            ccc.listChapters();
+            ccc.findChapterById();
         } else if (entity.equals("Question")) {
             FindQuestionByIdUC fq = new FindQuestionByIdUC(qs);
             QuestionController c = new QuestionController(fq);
-            c.listQuestions();
+            c.searchQuestions();
         } else if (entity.equals("CategoriesCatalog")) {
             FindCategoriesCatalogByIdUC fcc = new FindCategoriesCatalogByIdUC(ccs);
             CategoriesCatalogController ccc = new CategoriesCatalogController(fcc);
-            ccc.listCategoriesCatalogs();
+            ccc.findCategoriesCatalogById();
         } else if (entity.equals("ResponseOptions")) {
             FindResponseOptionsByIdUC fr = new FindResponseOptionsByIdUC(rs);
             ResponseOptionsController c = new ResponseOptionsController(fr);
-            c.listResponseOptions();
+            c.findResponseOptionsById();
         } else if (entity.equals("SubresponseOptions")) {
             FindSubresponseOptionsByIdUC fso = new FindSubresponseOptionsByIdUC(sop);
             SubresponseOptionsController cc = new SubresponseOptionsController(fso);
-            cc.listSubresponseOptions();
+            cc.findSubresponseOptionsById();
         }
     }
 
     private void handleUpdate(String entity) {
         // TODO, Survey Search
         if (entity.equals("Survey")) {
+            UpdateSurveyUC uq = new UpdateSurveyUC(ss);
+            ListSurveysUC ls = new ListSurveysUC(ss);
+            FindSurveyByNameUC fsn = new FindSurveyByNameUC(ss);
+            FindSurveyByIdUC fid = new FindSurveyByIdUC(ss);
+            SurveyController cc = new SurveyController(uq,ls,fsn,fid);
+            cc.updateSurvey();
         } else if (entity.equals("Chapter")) {
             UpdateChapterUC uc = new UpdateChapterUC(cs);
             ListChaptersUC lc = new ListChaptersUC(cs);
@@ -340,8 +343,8 @@ public class AdminForumController extends JFrame implements ActionListener {
             FindQuestionByNameUC fqn = new FindQuestionByNameUC(qs);
             FindCategoriesCatalogByIdUC fcci = new FindCategoriesCatalogByIdUC(ccs);
             FindCategoriesCatalogByNameUC fccn = new FindCategoriesCatalogByNameUC(ccs);
-            ResponseOptionsController c = new ResponseOptionsController(uro, lro, lq, lcc, froi, fron, fqi, fqn, fcci, fccn);
-            c.updateResponseOptions();
+//            ResponseOptionsController c = new ResponseOptionsController(uro, lro, lq, lcc, froi, fron, fqi, fqn, fcci, fccn);
+//            c.updateResponseOptions();
         } else if (entity.equals("SubresponseOptions")) {
             UpdateSubresponseOptionsUC uso = new UpdateSubresponseOptionsUC(sop);
             ListSubresponseOptionsUC lso = new ListSubresponseOptionsUC(sop);
@@ -358,11 +361,11 @@ public class AdminForumController extends JFrame implements ActionListener {
 
     private void handleDelete(String entity) {
         if (entity.equals("Survey")) {
-//            ListAllCountriesUC fcsuc = new ListAllCountriesUC(ss);
-//            FindSurveyByNameUC fciduc = new FindSurveyByNameUC(ss);
-//            DeleteSurveyUC dcuc = new DeleteSurveyUC(ss);
-//            SurveyController uiSurvey = new SurveyController(dcuc, fcsuc, fciduc);
-//            uiSurvey.DeleteSurvey();
+            DeleteSurveyUC ds = new DeleteSurveyUC(ss);
+            ListSurveysUC lss = new ListSurveysUC(ss);
+            FindSurveyByNameUC fsn = new FindSurveyByNameUC(ss);
+            SurveyController ccc = new SurveyController(ds, lss, fsn);
+            ccc.deleteSurvey();
         } else if (entity.equals("Chapter")) {
             DeleteChapterUC deleteChapterUC = new DeleteChapterUC(cs);
             ListChaptersUC listChaptersUC = new ListChaptersUC(cs);

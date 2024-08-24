@@ -21,10 +21,8 @@ public class CategoriesCatalogController {
     Map<String, List<Object>> mapOfList;
 
     // Handle Create
-    public CategoriesCatalogController(CreateCategoriesCatalogUC createCategoriesCatalogUC, ListCategoriesCatalogsUC listCategoriesCatalogsUC, FindCategoriesCatalogByNameUC findCategoriesCatalogByNameUC) {
+    public CategoriesCatalogController(CreateCategoriesCatalogUC createCategoriesCatalogUC) {
         this.createCategoriesCatalogUC = createCategoriesCatalogUC;
-        this.listCategoriesCatalogsUC = listCategoriesCatalogsUC;
-        this.findCategoriesCatalogByNameUC = findCategoriesCatalogByNameUC;
     }
 
     // Handle List
@@ -50,15 +48,10 @@ public class CategoriesCatalogController {
         this.listCategoriesCatalogsUC = listCategoriesCatalogsUC;
         this.findCategoriesCatalogByNameUC = findCategoriesCatalogByNameUC;
     }
-    
-
 
     public void createCategoriesCatalog() {
         CategoriesCatalog categoriesCatalog = new CategoriesCatalog();
-        List<Object> listOfCategoriesCatalogs = Arrays.asList(listCategoriesCatalogsUC, findCategoriesCatalogByNameUC);
         mapOfList = new LinkedHashMap<>();
-
-        mapOfList.put("CategoriesCatalog", listOfCategoriesCatalogs);
         this.createController = new CreateController(categoriesCatalog, createCategoriesCatalogUC, mapOfList);
     }
 

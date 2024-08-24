@@ -81,17 +81,19 @@ public class SubresponseOptionsController {
 
     public void createSubresponseOptions() {
         SubresponseOptions subresponseOptions = new SubresponseOptions();
-        List<Object> listOfSubresponseOption = Arrays.asList(listSubresponseOptionsUC);
+        List<Object> listOfResponseOption = Arrays.asList(listResponseOptionsUC, findResponseOptionsByNameUC);
         mapOfList = new LinkedHashMap<>();
-        mapOfList.put("SubresponseOptions", listOfSubresponseOption);
+        mapOfList.put("ResponseOptions", listOfResponseOption);
         this.createController = new CreateController(subresponseOptions, createSubresponseOptionsUC, mapOfList);
     }
 
     public void updateSubresponseOptions() {
         SubresponseOptions subresponseOptions = new SubresponseOptions();
-        List<Object> listOfSubresponseOption = Arrays.asList(listSubresponseOptionsUC);
+        List<Object> listOfSubResponseOption = Arrays.asList(listSubresponseOptionsUC, findSubresponseOptionsBySubresponseTextUC);
+        List<Object> listOfResponseOption = Arrays.asList(listResponseOptionsUC, findResponseOptionsByNameUC);
         mapOfList = new LinkedHashMap<>();
-        mapOfList.put("SubresponseOptions", listOfSubresponseOption);
+        mapOfList.put("ResponseOptions", listOfResponseOption);
+        mapOfList.put("SubResponseOptions", listOfSubResponseOption);
         this.updateController = new UpdateController(subresponseOptions, updateSubresponseOptionsUC, listSubresponseOptionsUC, findSubresponseOptionsByIdUC, mapOfList);
     }
 

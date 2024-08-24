@@ -5,12 +5,12 @@ import com.example.modules.subresponseoptions.domain.entity.SubresponseOptions;
 
 import java.util.List;
 
-public class FindSubresponseOptionsByResponseOptionsIdUC {
+public class ListSubresponseOptionsByResponseOptionsIdUC {
     private final SubresponseOptionsService subresponseOptionsService;
 
-    public FindSubresponseOptionsByResponseOptionsIdUC(SubresponseOptionsService subresponseOptionsService) {
+    public ListSubresponseOptionsByResponseOptionsIdUC(SubresponseOptionsService subresponseOptionsService) {
         this.subresponseOptionsService = subresponseOptionsService;
     }
 
-    public List<SubresponseOptions> find(int id) { return this.subresponseOptionsService.findSubresponseOptionsByResponseOptionsId(id); }
+    public List<SubresponseOptions> list(int id) { return this.subresponseOptionsService.listSubresponseOptionsByResponseOptionsId(id); }
 }

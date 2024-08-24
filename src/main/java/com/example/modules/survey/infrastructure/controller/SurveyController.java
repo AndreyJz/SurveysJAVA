@@ -1,7 +1,12 @@
 package com.example.modules.survey.infrastructure.controller;
 
+import com.example.UI.infrastructure.controller.*;
+import com.example.modules.categoriescatalog.domain.entity.CategoriesCatalog;
 import com.example.modules.chapter.domain.entity.Chapter;
+import com.example.modules.responseoptions.application.ListResponseOptionsByParentIdUC;
 import com.example.modules.responseoptions.application.ListResponseOptionsByQuestionIdUC;
+import com.example.modules.subresponseoptions.application.ListSubresponseOptionsByResponseOptionsIdUC;
+import com.example.modules.subresponseoptions.domain.entity.SubresponseOptions;
 import com.example.modules.survey.application.*;
 import com.example.modules.chapter.application.*;
 import com.example.modules.question.application.*;
@@ -12,17 +17,27 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SurveyController extends JFrame implements ActionListener {
+    private CreateController createController;
+    private UpdateController updateController;
+    private DeleteController deleteController;
+    private ListController listController;
+    private SearchController searchController;
+    private CreateSurveyUC createSurveyUC;
+    private UpdateSurveyUC updateSurveyUC;
+    private DeleteSurveyUC deleteSurveyUC;
     private FindSurveyByIdUC findSurveyByIdUC;
     private FindSurveyByNameUC findSurveyByNameUC;
     private ListSurveysUC listSurveysUC;
     private ListChapterBySurveyIdUC listChapterBySurveyIdUC;
     private ListQuestionsByChapterIdUC listQuestionsByChapterIdUC;
     private ListResponseOptionsByQuestionIdUC listResponseOptionsByQuestionIdUC;
+    private ListResponseOptionsByParentIdUC listResponseOptionsByParentIdUC;
+    private ListSubresponseOptionsByResponseOptionsIdUC listSubresponseOptionsByResponseOptionsIdUC;
 
     private JPanel mainPanel;
     private JPanel contentPanel;
@@ -35,13 +50,68 @@ public class SurveyController extends JFrame implements ActionListener {
     private JButton toggleButton;
     private JComboBox<String> selectComboBox;
     private List<JPanel> chapterPanels;
+    Map<String, List<Object>> mapOfList;
 
-    public SurveyController(ListSurveysUC ls, FindSurveyByNameUC fs, ListChapterBySurveyIdUC lc, ListQuestionsByChapterIdUC lq, ListResponseOptionsByQuestionIdUC lro) {
+    public SurveyController(ListSurveysUC listSurveysUC) {
+        this.listSurveysUC = listSurveysUC;
+    }
+
+    public SurveyController(FindSurveyByIdUC findSurveyByIdUC) {
+        this.findSurveyByIdUC = findSurveyByIdUC;
+    }
+
+    public SurveyController(CreateSurveyUC createSurveyUC) {
+        this.createSurveyUC = createSurveyUC;
+    }
+
+    public SurveyController(UpdateSurveyUC updateSurveyUC, ListSurveysUC listSurveysUC, FindSurveyByNameUC findSurveyByNameUC, FindSurveyByIdUC findSurveyByIdUC) {
+        this.updateSurveyUC = updateSurveyUC;
+        this.listSurveysUC = listSurveysUC;
+        this.findSurveyByNameUC = findSurveyByNameUC;
+        this.findSurveyByIdUC = findSurveyByIdUC;
+    }
+
+    public SurveyController(DeleteSurveyUC deleteSurveyUC, ListSurveysUC listSurveysUC, FindSurveyByNameUC findSurveyByNameUC) {
+        this.deleteSurveyUC = deleteSurveyUC;
+        this.listSurveysUC = listSurveysUC;
+        this.findSurveyByNameUC = findSurveyByNameUC;
+    }
+
+    public SurveyController(ListSurveysUC ls, FindSurveyByNameUC fs, ListChapterBySurveyIdUC lc, ListQuestionsByChapterIdUC lq, ListResponseOptionsByQuestionIdUC lro, ListResponseOptionsByParentIdUC lrp, ListSubresponseOptionsByResponseOptionsIdUC lsr) {
         this.listSurveysUC = ls;
         this.findSurveyByNameUC = fs;
         this.listChapterBySurveyIdUC = lc;
         this.listQuestionsByChapterIdUC = lq;
         this.listResponseOptionsByQuestionIdUC = lro;
+        this.listResponseOptionsByParentIdUC = lrp;
+        this.listSubresponseOptionsByResponseOptionsIdUC = lsr;
+    }
+
+    public void createSurvey() {
+        Survey survey = new Survey();
+        mapOfList = new LinkedHashMap<>();
+        this.createController = new CreateController(survey, createSurveyUC, mapOfList);
+    }
+
+    public void updateSurvey() {
+        Survey survey = new Survey();
+        mapOfList = new LinkedHashMap<>();
+        this.updateController = new UpdateController(survey, updateSurveyUC, listSurveysUC, findSurveyByNameUC, mapOfList);
+    }
+
+    public void findSurveyByID() {
+        Survey survey = new Survey();
+        this.searchController = new SearchController(survey, findSurveyByIdUC);
+    }
+
+    public void listSurveys() {
+        Survey survey = new Survey();
+        this.listController = new ListController(survey, listSurveysUC);
+    }
+
+    public void deleteSurvey() {
+        Survey survey = new Survey();
+        this.deleteController = new DeleteController(survey, deleteSurveyUC, listSurveysUC, findSurveyByNameUC);
     }
 
     public void fillSurvey() {
@@ -83,23 +153,6 @@ public class SurveyController extends JFrame implements ActionListener {
         add(mainPanel);
 
         setVisible(true);
-    }
-
-    public Optional<Survey> FindSurveyByID() {
-        try {
-            int idCountry = Integer.parseInt(JOptionPane.showInputDialog(null, "Insert The Code of The Survey you're looking for: "));
-            Optional<Survey> survey = findSurveyByIdUC.find(idCountry);
-            if (survey.isPresent()) {
-                JOptionPane.showMessageDialog(null, "Survey founded:\nID: " + survey.get().getId() + "\nCrated At: " + survey.get().getCreatedAt() + "\nUpdated At: " + survey.get().getUpdatedAt() + "\nDescription: " + survey.get().getDescription() + "\nNombre: " + survey.get().getName(),
-                        "Survey's info", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(null, "Survey not funded", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-            return Optional.of(survey.get());
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "Please enter a valid type of data!", JOptionPane.ERROR_MESSAGE);
-        }
-        return Optional.empty();
     }
 
     private void generateSurvey (int surveyId) {
@@ -145,7 +198,10 @@ public class SurveyController extends JFrame implements ActionListener {
 
     public void generateChapter(String title,int chapterId) {
         JPanel content = new JPanel();
-        content.setLayout(new GridLayout(0,1,8,8));
+        content.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         content.setBackground(new Color(0x123456));
 
         // Create the header with the toggle button
@@ -164,32 +220,92 @@ public class SurveyController extends JFrame implements ActionListener {
 
         chapterPanels.add(content);
 
-        generateQuestion(content,chapterId);
+        generateQuestion(content,chapterId,gbc);
 
         content.setVisible(true);
         toggleButton.addActionListener(new ToggleAction(content));
 
     }
 
-    public void generateQuestion(JPanel content, int chapterId) {
+    public void generateQuestion(JPanel content, int chapterId, GridBagConstraints gbc) {
+        AtomicInteger row = new AtomicInteger(0);
         listQuestionsByChapterIdUC.list(chapterId).forEach(question -> {
             JLabel questionLabel = new JLabel("Q" + question.getQuestionNumber() + ": " + question.getQuestionText());
             questionLabel.setForeground(new Color(236, 224, 220));
-            content.add(questionLabel);
-            if (question.getResponseType().equals("radio")) {
+            gbc.gridy = row.getAndIncrement();
+            gbc.gridx = 1;
+            content.add(questionLabel, gbc);
+            if (question.getResponseType().equals("radio") || question.getResponseType().equals("checkbox")) {
+                ButtonGroup group = new ButtonGroup();
                 listResponseOptionsByQuestionIdUC.list(question.getId()).forEach(responseOption -> {
                     JRadioButton response = new JRadioButton(responseOption.getOptionText() + ".");
                     response.setBackground(new Color(0x123456));
                     response.setForeground(new Color(236, 224, 220));
-                    content.add(response);
+                    gbc.gridy = row.getAndIncrement();
+                    gbc.gridx = 1;
+                    group.add(response);
+                    content.add(response, gbc);
+
+                    if (responseOption.getParentResponseId() != 0) {
+                        ButtonGroup group2 = new ButtonGroup();
+                        listResponseOptionsByParentIdUC.list(responseOption.getParentResponseId()).forEach(responseOptions -> {
+                            if (responseOptions.getTypeComponentHtml().equals("radio") || responseOptions.getTypeComponentHtml().equals("checkbox")) {
+                                JRadioButton response2 = new JRadioButton(responseOption.getOptionText() + ".");
+                                response2.setBackground(new Color(0x123456));
+                                response2.setForeground(new Color(236, 224, 220));
+                                gbc.gridy = row.getAndIncrement();
+                                gbc.gridx = 2;
+                                group2.add(response2);
+                                content.add(response2, gbc);
+                            } else {
+                                JLabel responseLabel = new JLabel(responseOption.getOptionText() + ".");
+                                responseLabel.setForeground(new Color(236, 224, 220));
+                                responseLabel.setBackground(new Color(0x123456));
+                                JTextField response2 = new JTextField();
+                                response2.setForeground(new Color(236, 224, 220));
+                            }
+                        });
+                    }
+
+                    List<SubresponseOptions> subresponseOptions = listSubresponseOptionsByResponseOptionsIdUC.list(responseOption.getId());
+                    if (!subresponseOptions.isEmpty()) {
+                        ButtonGroup group3 = new ButtonGroup();
+                        subresponseOptions.forEach(option -> {
+                            System.out.println(option.getSubresponseText());
+                            if (option.getComponentHtml().equals("radio") || option.getComponentHtml().equals("checkbox")) {
+                                JRadioButton response3 = new JRadioButton(option.getSubresponseText() + ".");
+                                response3.setBackground(new Color(0x123456));
+                                response3.setForeground(new Color(236, 224, 220));
+                                gbc.gridy = row.getAndIncrement();
+                                gbc.gridx = 2;
+                                group3.add(response3);
+                                content.add(response3, gbc);
+                            } else {
+                                JLabel responseLabel = new JLabel(option.getSubresponseText() + ".");
+                                responseLabel.setForeground(new Color(236, 224, 220));
+                                responseLabel.setBackground(new Color(0x123456));
+                                JTextField response3 = new JTextField();
+                                response3.setForeground(new Color(236, 224, 220));
+                                gbc.gridy = row.getAndIncrement();
+                                gbc.gridx = 2;
+                                content.add(responseLabel, gbc);
+                                gbc.gridy = row.getAndIncrement();
+                                content.add(response3, gbc);
+                            }
+                        });
+                    }
                 });
             } else {
                 JTextField response = new JTextField();
-                content.add(response);
+                gbc.gridy = row.getAndIncrement();
+                gbc.gridx = 1;
+                content.add(response, gbc);
             }
         });
-        JLabel empty = new JLabel("");
-        content.add(empty);
+//        JLabel empty = new JLabel("");
+//        gbc.gridy = row.getAndIncrement();
+//        gbc.gridx = 2;
+//        content.add(empty,gbc);
     }
 
     private class ToggleAction implements ActionListener {
@@ -208,29 +324,6 @@ public class SurveyController extends JFrame implements ActionListener {
             repaint();
         }
 
-    }
-
-    public List<Survey> ListSurveys() {
-        List<Survey> surveys =  listSurveysUC.list();
-        showSurveysTable(surveys);
-        return surveys;
-    }
-
-    public static void showSurveysTable(List<Survey> surveys) {
-        String[] columns = {"ID", "Created At", "Updated At", "Description", "Name"};
-        DefaultTableModel model = new DefaultTableModel(columns, 0);
-
-        surveys.forEach(survey -> {
-            Object[] row = {survey.getId(), survey.getCreatedAt(), survey.getUpdatedAt(), survey.getDescription(), survey.getName()};
-            model.addRow(row);
-        });
-
-        JTable table = new JTable(model);
-        JScrollPane scrollPane = new JScrollPane(table);
-        JPanel panel = new JPanel();
-        panel.add(scrollPane);
-
-        JOptionPane.showMessageDialog(null, panel, "Surveys List", JOptionPane.PLAIN_MESSAGE);
     }
 
     @Override

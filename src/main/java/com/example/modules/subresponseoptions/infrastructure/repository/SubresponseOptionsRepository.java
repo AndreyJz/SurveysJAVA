@@ -35,7 +35,7 @@ public class SubresponseOptionsRepository implements SubresponseOptionsService {
             ps.setString(3, subresponseOptions.getSubresponseText());
             ps.setInt(4, subresponseOptions.getResponseOptionsId());
             ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "SubresponseOptions has been created!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "SubResponseOption has been created!", "Success", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -51,7 +51,7 @@ public class SubresponseOptionsRepository implements SubresponseOptionsService {
             ps.setInt(4, subresponseOptions.getResponseOptionsId());
             ps.setInt(5, subresponseOptions.getId());
             ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "SubresponseOptions has been updated!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "SubresponseOption has been updated!", "Success", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -63,7 +63,7 @@ public class SubresponseOptionsRepository implements SubresponseOptionsService {
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, id);
             ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "SubresponseOptions has been deleted!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "SubresponseOption has been deleted!", "Success", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -116,13 +116,13 @@ public class SubresponseOptionsRepository implements SubresponseOptionsService {
     }
 
     @Override
-    public List<SubresponseOptions> findSubresponseOptionsByResponseOptionsId(int id) {
+    public List<SubresponseOptions> listSubresponseOptionsByResponseOptionsId(int id) {
         String query = "SELECT * FROM subresponse_options WHERE responseoptions_id = ?";
         List<SubresponseOptions> subresponseOptionsList = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
+            while (rs.next()) {
                 SubresponseOptions subresponseOptions = new SubresponseOptions();
                 subresponseOptions.setId(rs.getInt("id"));
                 subresponseOptions.setSubresponseNumber(rs.getInt("subresponse_number"));

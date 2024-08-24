@@ -19,7 +19,7 @@ public class ResponseOptionsController {
     private DeleteResponseOptionsUC deleteResponseOptionsUC;
     private FindResponseOptionsByIdUC findResponseOptionsByIdUC;
     private FindResponseOptionsByNameUC findResponseOptionsByNameUC;
-    private FindResponseOptionsByCategoryCatalogIdUC findResponseOptionsByCategoryCatalogIdUC;
+    private ListResponseOptionsByQuestionIdUC listResponseOptionsByQuestionIdUC;
     private ListResponseOptionsUC listResponseOptionsUC;
     private FindCategoriesCatalogByNameUC findCategoriesCatalogByNameUC;
     private FindCategoriesCatalogByIdUC findCategoriesCatalogByIdUC;
@@ -40,10 +40,10 @@ public class ResponseOptionsController {
         this.findQuestionByNameUC = findQuestionByNameUC;
     }
 
-    public ResponseOptionsController(UpdateResponseOptionsUC updateResponseOptionsUC, ListResponseOptionsUC listResponseOptionsUC, FindResponseOptionsByCategoryCatalogIdUC findResponseOptionsByCategoryCatalogIdUC) {
+    public ResponseOptionsController(UpdateResponseOptionsUC updateResponseOptionsUC, ListResponseOptionsUC listResponseOptionsUC, List findResponseOptionsByCategoryCatalogIdUC) {
         this.updateResponseOptionsUC = updateResponseOptionsUC;
         this.listResponseOptionsUC = listResponseOptionsUC;
-        this.findResponseOptionsByCategoryCatalogIdUC = findResponseOptionsByCategoryCatalogIdUC;
+//        this.listResponseOptionsByQuestionIdUC = findResponseOptionsByCategoryCatalogIdUC;
     }
 
     public ResponseOptionsController(DeleteResponseOptionsUC deleteResponseOptionsUC, ListResponseOptionsUC listResponseOptionsUC, FindResponseOptionsByNameUC findResponseOptionsByNameUC) {
@@ -69,17 +69,18 @@ public class ResponseOptionsController {
 
         mapOfList.put("ResponseOptions", listOfResponseOption);
         mapOfList.put("CategoryCatalog", listOfCategory);
-        mapOfList.put("Question", listOfQuestion);
+        mapOfList.put("ParentResponseId", listOfResponseOption);
+        mapOfList.put("QuestionId", listOfQuestion);
         this.createController = new CreateController(responseOptions, createResponseOptionsUC, mapOfList);
     }
 
     public void updateResponseOptions() {
         ResponseOptions responseOptions = new ResponseOptions();
-        List<Object> listOfOptions = Arrays.asList(listResponseOptionsUC, findResponseOptionsByCategoryCatalogIdUC);
+        List<Object> listOfOptions = Arrays.asList(listResponseOptionsUC, listResponseOptionsByQuestionIdUC);
         mapOfList = new LinkedHashMap<>();
 
         mapOfList.put("ResponseOptions", listOfOptions);
-        this.updateController = new UpdateController(responseOptions, updateResponseOptionsUC, listResponseOptionsUC, findResponseOptionsByCategoryCatalogIdUC, mapOfList);
+        this.updateController = new UpdateController(responseOptions, updateResponseOptionsUC, listResponseOptionsUC, listResponseOptionsByQuestionIdUC, mapOfList);
     }
 
     public void deleteResponseOptions() {

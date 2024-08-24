@@ -31,7 +31,11 @@ public class ResponseOptionsRepository implements ResponseOptionsService {
         String query = "INSERT INTO response_options (option_value, categorycatalog_id, created_at, updated_at, parentresponse_id, question_id, typecomponenthtml, comment_response, option_text) VALUES (?, ?, NOW(), NULL, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, responseOptions.getOptionValue());
-            ps.setInt(2, responseOptions.getCategoryCatalogId());
+            if (responseOptions.getCategoryCatalogId() == 0) {
+                ps.setNull(2, Types.INTEGER);
+            } else {
+                ps.setInt(2, responseOptions.getParentResponseId());
+            }
             if (responseOptions.getParentResponseId() == 0) {
                 ps.setNull(3, Types.INTEGER);
             } else {
@@ -176,6 +180,35 @@ public class ResponseOptionsRepository implements ResponseOptionsService {
         try {
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setInt(1, Id);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ResponseOptions responseOptions = new ResponseOptions();
+                    responseOptions.setId(rs.getInt("id"));
+                    responseOptions.setOptionValue(rs.getInt("option_value"));
+                    responseOptions.setCategoryCatalogId(rs.getInt("categorycatalog_id"));
+                    responseOptions.setCreatedAt(rs.getTimestamp("created_at"));
+                    responseOptions.setUpdatedAt(rs.getTimestamp("updated_at"));
+                    responseOptions.setParentResponseId(rs.getInt("parentresponse_id"));
+                    responseOptions.setQuestionId(rs.getInt("question_id"));
+                    responseOptions.setTypeComponentHtml(rs.getString("typecomponenthtml"));
+                    responseOptions.setCommentResponse(rs.getString("comment_response"));
+                    responseOptions.setOptionText(rs.getString("option_text"));
+                    responseOptionsList.add(responseOptions);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return responseOptionsList;
+    }
+
+    @Override
+    public List<ResponseOptions> listResponseOptionsByParentId(int id) {
+        String query = "SELECT * FROM response_options WHERE parentresponse_id = ?";
+        List<ResponseOptions> responseOptionsList = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     ResponseOptions responseOptions = new ResponseOptions();

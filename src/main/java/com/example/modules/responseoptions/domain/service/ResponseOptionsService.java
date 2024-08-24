@@ -13,4 +13,5 @@ public interface ResponseOptionsService {
     public List<ResponseOptions> listResponseOptions();
     public Optional<ResponseOptions> findResponseOptionsByName(String name);
     public List<ResponseOptions> listResponseOptionsByQuestionId(int id);
+    public List<ResponseOptions> listResponseOptionsByParentId(int id);
 }

@@ -12,5 +12,5 @@ public interface SubresponseOptionsService {
     Optional<SubresponseOptions> findSubresponseOptionsById(int id);
     List<SubresponseOptions> listSubresponseOptions();
     List<SubresponseOptions> findSubresponseOptionsBySubresponseText(String text);
-    List<SubresponseOptions> findSubresponseOptionsByResponseOptionsId(int id);
+    List<SubresponseOptions> listSubresponseOptionsByResponseOptionsId(int id);
 }

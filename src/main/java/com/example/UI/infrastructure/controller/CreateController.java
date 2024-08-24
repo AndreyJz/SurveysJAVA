@@ -109,11 +109,8 @@ public class CreateController extends JFrame implements ActionListener {
                     case "Question":
                         propertyName = "CommentQuestion";
                         break;
-                    case "ResponseOptions":
+                    case "ResponseOptions", "SubResponseOptions":
                         propertyName = "OptionText";
-                        break;
-                    case "":
-                        propertyName = "Title";
                         break;
                     default:
                         propertyName = "Name";
