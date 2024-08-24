@@ -5,6 +5,7 @@ import com.example.modules.categoriescatalog.domain.entity.CategoriesCatalog;
 import com.example.modules.chapter.domain.entity.Chapter;
 import com.example.modules.responseoptions.application.ListResponseOptionsByParentIdUC;
 import com.example.modules.responseoptions.application.ListResponseOptionsByQuestionIdUC;
+import com.example.modules.responseoptions.domain.entity.ResponseOptions;
 import com.example.modules.subresponseoptions.application.ListSubresponseOptionsByResponseOptionsIdUC;
 import com.example.modules.subresponseoptions.domain.entity.SubresponseOptions;
 import com.example.modules.survey.application.*;
@@ -17,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -235,62 +237,96 @@ public class SurveyController extends JFrame implements ActionListener {
             gbc.gridy = row.getAndIncrement();
             gbc.gridx = 1;
             content.add(questionLabel, gbc);
+
             if (question.getResponseType().equals("radio") || question.getResponseType().equals("checkbox")) {
                 ButtonGroup group = new ButtonGroup();
-                listResponseOptionsByQuestionIdUC.list(question.getId()).forEach(responseOption -> {
-                    JRadioButton response = new JRadioButton(responseOption.getOptionText() + ".");
-                    response.setBackground(new Color(0x123456));
-                    response.setForeground(new Color(236, 224, 220));
-                    gbc.gridy = row.getAndIncrement();
-                    gbc.gridx = 1;
-                    group.add(response);
-                    content.add(response, gbc);
 
-                    if (responseOption.getParentResponseId() != 0) {
+                listResponseOptionsByQuestionIdUC.list(question.getId()).forEach(responseOption -> {
+                    if (responseOption.getParentResponseId() == 0) {
+                        JRadioButton response = new JRadioButton(responseOption.getOptionText() + ".");
+                        response.setBackground(new Color(0x123456));
+                        response.setForeground(new Color(236, 224, 220));
+                        gbc.gridy = row.getAndIncrement();
+                        gbc.gridx = 1;
+                        group.add(response);
+                        content.add(response, gbc);
+
+//                        List<ResponseOptions> responseOptionsSons = listResponseOptionsByParentIdUC.list(responseOption.getParentResponseId());
+                        List<JRadioButton> responseOptionsSons = new ArrayList<>();
                         ButtonGroup group2 = new ButtonGroup();
-                        listResponseOptionsByParentIdUC.list(responseOption.getParentResponseId()).forEach(responseOptions -> {
-                            if (responseOptions.getTypeComponentHtml().equals("radio") || responseOptions.getTypeComponentHtml().equals("checkbox")) {
-                                JRadioButton response2 = new JRadioButton(responseOption.getOptionText() + ".");
+                        listResponseOptionsByParentIdUC.list(responseOption.getId()).forEach(responseOption2 -> {
+                            if (responseOption2.getTypeComponentHtml().equals("radio") || responseOption2.getTypeComponentHtml().equals("checkbox")) {
+                                System.out.println(responseOption2.getOptionText());
+                                JRadioButton response2 = new JRadioButton(responseOption2.getOptionText() + ".");
+                                response2.setVisible(false);
                                 response2.setBackground(new Color(0x123456));
                                 response2.setForeground(new Color(236, 224, 220));
                                 gbc.gridy = row.getAndIncrement();
                                 gbc.gridx = 2;
-                                group2.add(response2);
                                 content.add(response2, gbc);
+                                responseOptionsSons.add(response2);
+                                group2.add(response2);
+
+                                ButtonGroup group3 = new ButtonGroup();
+                                List<JRadioButton> subResponseButtons = new ArrayList<>();
+                                List<SubresponseOptions> subResponseOptions = listSubresponseOptionsByResponseOptionsIdUC.list(responseOption2.getId());
+                                for (SubresponseOptions subResponseOption : subResponseOptions) {
+                                    System.out.println(subResponseOption.getSubresponseText());
+                                    JRadioButton response3 = new JRadioButton(subResponseOption.getSubresponseText() + ".");
+                                    response3.setVisible(false);
+                                    response3.setBackground(new Color(0x123456));
+                                    response3.setForeground(new Color(236, 224, 220));
+                                    gbc.gridy = row.getAndIncrement();
+                                    gbc.gridx = 3;
+                                    content.add(response3, gbc);
+                                    subResponseButtons.add(response3);
+                                    group3.add(response3);
+                                }
+
+                                response2.addItemListener(e -> {
+                                    boolean selected = (e.getStateChange() == ItemEvent.SELECTED);
+                                    for (JRadioButton subOptionButton : subResponseButtons) {
+                                        subOptionButton.setVisible(selected);
+                                        group3.clearSelection();
+                                    }
+                                });
+
+                                response.addItemListener(e -> {
+                                    boolean selected = (e.getStateChange() == ItemEvent.SELECTED);
+                                    for (JRadioButton responseOptionsSon : responseOptionsSons) {
+                                        responseOptionsSon.setVisible(selected);
+                                        group2.clearSelection();
+                                    }
+                                });
+
                             } else {
-                                JLabel responseLabel = new JLabel(responseOption.getOptionText() + ".");
+                                JLabel responseLabel = new JLabel(responseOption2.getOptionText() + ".");
                                 responseLabel.setForeground(new Color(236, 224, 220));
                                 responseLabel.setBackground(new Color(0x123456));
                                 JTextField response2 = new JTextField();
                                 response2.setForeground(new Color(236, 224, 220));
                             }
                         });
-                    }
 
-                    List<SubresponseOptions> subresponseOptions = listSubresponseOptionsByResponseOptionsIdUC.list(responseOption.getId());
-                    if (!subresponseOptions.isEmpty()) {
-                        ButtonGroup group3 = new ButtonGroup();
-                        subresponseOptions.forEach(option -> {
-                            System.out.println(option.getSubresponseText());
-                            if (option.getComponentHtml().equals("radio") || option.getComponentHtml().equals("checkbox")) {
-                                JRadioButton response3 = new JRadioButton(option.getSubresponseText() + ".");
-                                response3.setBackground(new Color(0x123456));
-                                response3.setForeground(new Color(236, 224, 220));
-                                gbc.gridy = row.getAndIncrement();
-                                gbc.gridx = 2;
-                                group3.add(response3);
-                                content.add(response3, gbc);
-                            } else {
-                                JLabel responseLabel = new JLabel(option.getSubresponseText() + ".");
-                                responseLabel.setForeground(new Color(236, 224, 220));
-                                responseLabel.setBackground(new Color(0x123456));
-                                JTextField response3 = new JTextField();
-                                response3.setForeground(new Color(236, 224, 220));
-                                gbc.gridy = row.getAndIncrement();
-                                gbc.gridx = 2;
-                                content.add(responseLabel, gbc);
-                                gbc.gridy = row.getAndIncrement();
-                                content.add(response3, gbc);
+                        List<JRadioButton> subResponseButtons = new ArrayList<>();
+                        List<SubresponseOptions> subresponseOptions = listSubresponseOptionsByResponseOptionsIdUC.list(responseOption.getId());
+                        for (SubresponseOptions subResponseOption : subresponseOptions) {
+                            JRadioButton response2 = new JRadioButton(subResponseOption.getSubresponseText() + ".");
+                            response2.setVisible(false);
+                            response2.setBackground(new Color(0x123456));
+                            response2.setForeground(new Color(236, 224, 220));
+                            gbc.gridy = row.getAndIncrement();
+                            gbc.gridx = 2;
+                            group2.add(response2);
+                            subResponseButtons.add(response2);
+                            content.add(response2, gbc);
+                        }
+
+                        response.addItemListener(e -> {
+                            boolean selected = (e.getStateChange() == ItemEvent.SELECTED);
+                            for (JRadioButton subOptionButton : subResponseButtons) {
+                                subOptionButton.setVisible(selected);
+                                group2.clearSelection();
                             }
                         });
                     }
@@ -302,10 +338,6 @@ public class SurveyController extends JFrame implements ActionListener {
                 content.add(response, gbc);
             }
         });
-//        JLabel empty = new JLabel("");
-//        gbc.gridy = row.getAndIncrement();
-//        gbc.gridx = 2;
-//        content.add(empty,gbc);
     }
 
     private class ToggleAction implements ActionListener {

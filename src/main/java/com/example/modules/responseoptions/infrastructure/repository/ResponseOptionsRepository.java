@@ -34,7 +34,7 @@ public class ResponseOptionsRepository implements ResponseOptionsService {
             if (responseOptions.getCategoryCatalogId() == 0) {
                 ps.setNull(2, Types.INTEGER);
             } else {
-                ps.setInt(2, responseOptions.getParentResponseId());
+                ps.setInt(2, responseOptions.getCategoryCatalogId());
             }
             if (responseOptions.getParentResponseId() == 0) {
                 ps.setNull(3, Types.INTEGER);
@@ -45,7 +45,6 @@ public class ResponseOptionsRepository implements ResponseOptionsService {
             ps.setString(5, responseOptions.getTypeComponentHtml());
             ps.setString(6, responseOptions.getCommentResponse());
             ps.setString(7, responseOptions.getOptionText());
-            System.out.println(responseOptions.getCategoryCatalogId());
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "ResponseOptions has been created!", "Success", JOptionPane.PLAIN_MESSAGE);
         } catch (SQLException e) {
