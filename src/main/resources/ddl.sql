@@ -209,14 +209,6 @@ VALUES (NOW(), NOW(), 2, 'checkbox', '2000s Era', @response_option1_id);
 -- Get the ID of the first subresponse option
 SET @subresponse_option1_id = LAST_INSERT_ID();
 
--- Insert response question related to a response option
-INSERT INTO response_question (response_id, subresponses_id, responsetext)
-VALUES (@response_option1_id, NULL, 'Why did you choose the Lakers?');
-
--- Insert response question related to a subresponse option
-INSERT INTO response_question (response_id, subresponses_id, responsetext)
-VALUES (NULL, @subresponse_option1_id, 'Why do you prefer the 1980s Era?');
-
 -- Insert response options for Chapter 2, Question 1
 INSERT INTO response_options (option_value, categorycatalog_id, created_at, updated_at, parentresponse_id, question_id, typecomponenthtml, comment_response, option_text)
 VALUES (1, @category_id, NOW(), NOW(), NULL, (SELECT id FROM questions WHERE question_number='1' AND chapter_id=@chapter2_id), 'radio', 'Choose LeBron James', 'LeBron James');

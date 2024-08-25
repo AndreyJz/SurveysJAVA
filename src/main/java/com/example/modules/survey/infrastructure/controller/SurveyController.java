@@ -216,10 +216,13 @@ public class SurveyController extends JFrame implements ActionListener {
     }
 
     public void generateChapter(String title,int chapterId) {
+        responsesOption.clear();
+        subResponses.clear();
+
         JPanel content = new JPanel();
         content.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         content.setBackground(new Color(0x123456));
 
@@ -326,7 +329,6 @@ public class SurveyController extends JFrame implements ActionListener {
                                     for (JRadioButton subOptionButton : subResponseButtons) {
                                         subOptionButton.setVisible(selected);
                                         group3.clearSelection();
-                                        group2.getSelection();
                                     }
                                 });
 
@@ -345,10 +347,18 @@ public class SurveyController extends JFrame implements ActionListener {
                                 JTextField response2 = new JTextField();
                                 response2.setForeground(new Color(236, 224, 220));
 
-                                response2.addActionListener(e -> {
-                                    String selectedRTA = response2.getText();
-                                    List<String> list = Arrays.asList(String.valueOf(responseOption2.getId()), selectedRTA);
-                                    responsesOption.put(responseOption.getId(),list);
+                                gbc.gridy = row.getAndIncrement();
+                                gbc.gridx = 2;
+                                content.add(responseLabel, gbc);
+                                gbc.gridy = row.getAndIncrement();
+                                content.add(response2, gbc);
+
+                                response2.addFocusListener(new java.awt.event.FocusAdapter() {
+                                    public void focusLost(java.awt.event.FocusEvent evt) {
+                                        String selectedRTA = response2.getText();
+                                        List<String> list = Arrays.asList(String.valueOf(responseOption2.getId()), selectedRTA);
+                                        responsesOption.put(responseOption.getId(),list);
+                                    }
                                 });
                             }
                         });
@@ -388,10 +398,12 @@ public class SurveyController extends JFrame implements ActionListener {
                         gbc.gridx = 1;
                         content.add(response, gbc);
 
-                        response.addActionListener(e -> {
-                            String selectedRTA = response.getText();
-                            List<String> list = Arrays.asList(String.valueOf(responseOption.getId()), selectedRTA);
-                            responsesOption.put(responseOption.getQuestionId(),list);
+                        response.addFocusListener(new java.awt.event.FocusAdapter() {
+                            public void focusLost(java.awt.event.FocusEvent evt) {
+                                String selectedRTA = response.getText();
+                                List<String> list = Arrays.asList(String.valueOf(responseOption.getId()), selectedRTA);
+                                responsesOption.put(responseOption.getQuestionId(),list);
+                            }
                         });
                     }
                 }
