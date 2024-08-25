@@ -4,6 +4,7 @@ import com.example.modules.subresponseoptions.domain.service.SubresponseOptionsS
 import com.example.modules.subresponseoptions.domain.entity.SubresponseOptions;
 
 import java.util.List;
+import java.util.Optional;
 
 public class FindSubresponseOptionsBySubresponseTextUC {
     private final SubresponseOptionsService subresponseOptionsService;
@@ -12,7 +13,7 @@ public class FindSubresponseOptionsBySubresponseTextUC {
         this.subresponseOptionsService = subresponseOptionsService;
     }
 
-    public List<SubresponseOptions> find(String text) {
+    public Optional<SubresponseOptions> find(String text) {
         return this.subresponseOptionsService.findSubresponseOptionsBySubresponseText(text);
     }
 }

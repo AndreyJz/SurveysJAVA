@@ -3,9 +3,12 @@ package com.example.modules.survey.infrastructure.controller;
 import com.example.UI.infrastructure.controller.*;
 import com.example.modules.categoriescatalog.domain.entity.CategoriesCatalog;
 import com.example.modules.chapter.domain.entity.Chapter;
+import com.example.modules.responseoptions.application.FindResponseOptionsByNameUC;
 import com.example.modules.responseoptions.application.ListResponseOptionsByParentIdUC;
 import com.example.modules.responseoptions.application.ListResponseOptionsByQuestionIdUC;
 import com.example.modules.responseoptions.domain.entity.ResponseOptions;
+import com.example.modules.responsequestions.domain.entity.ResponseQuestion;
+import com.example.modules.subresponseoptions.application.FindSubresponseOptionsBySubresponseTextUC;
 import com.example.modules.subresponseoptions.application.ListSubresponseOptionsByResponseOptionsIdUC;
 import com.example.modules.subresponseoptions.domain.entity.SubresponseOptions;
 import com.example.modules.survey.application.*;
@@ -40,6 +43,8 @@ public class SurveyController extends JFrame implements ActionListener {
     private ListResponseOptionsByQuestionIdUC listResponseOptionsByQuestionIdUC;
     private ListResponseOptionsByParentIdUC listResponseOptionsByParentIdUC;
     private ListSubresponseOptionsByResponseOptionsIdUC listSubresponseOptionsByResponseOptionsIdUC;
+    private FindResponseOptionsByNameUC findResponseOptionsByNameUC;
+    private FindSubresponseOptionsBySubresponseTextUC findSubresponseOptionsBySubresponseTextUC;
 
     private JPanel mainPanel;
     private JPanel contentPanel;
@@ -79,7 +84,7 @@ public class SurveyController extends JFrame implements ActionListener {
         this.findSurveyByNameUC = findSurveyByNameUC;
     }
 
-    public SurveyController(ListSurveysUC ls, FindSurveyByNameUC fs, ListChapterBySurveyIdUC lc, ListQuestionsByChapterIdUC lq, ListResponseOptionsByQuestionIdUC lro, ListResponseOptionsByParentIdUC lrp, ListSubresponseOptionsByResponseOptionsIdUC lsr) {
+    public SurveyController(ListSurveysUC ls, FindSurveyByNameUC fs, ListChapterBySurveyIdUC lc, ListQuestionsByChapterIdUC lq, ListResponseOptionsByQuestionIdUC lro, ListResponseOptionsByParentIdUC lrp, ListSubresponseOptionsByResponseOptionsIdUC lsr, FindResponseOptionsByNameUC findResponseOptionsByNameUC, FindSubresponseOptionsBySubresponseTextUC findSubresponseOptionsBySubresponseTextUC) {
         this.listSurveysUC = ls;
         this.findSurveyByNameUC = fs;
         this.listChapterBySurveyIdUC = lc;
@@ -87,6 +92,8 @@ public class SurveyController extends JFrame implements ActionListener {
         this.listResponseOptionsByQuestionIdUC = lro;
         this.listResponseOptionsByParentIdUC = lrp;
         this.listSubresponseOptionsByResponseOptionsIdUC = lsr;
+        this.findResponseOptionsByNameUC = findResponseOptionsByNameUC;
+        this.findSubresponseOptionsBySubresponseTextUC = findSubresponseOptionsBySubresponseTextUC;
     }
 
     public void createSurvey() {
@@ -175,8 +182,6 @@ public class SurveyController extends JFrame implements ActionListener {
         contentPanel.add(chapter, BorderLayout.CENTER);
 
         JScrollPane scrollPane = new JScrollPane(chapter);
-//        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-//        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         contentPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -251,7 +256,6 @@ public class SurveyController extends JFrame implements ActionListener {
                         group.add(response);
                         content.add(response, gbc);
 
-//                        List<ResponseOptions> responseOptionsSons = listResponseOptionsByParentIdUC.list(responseOption.getParentResponseId());
                         List<JRadioButton> responseOptionsSons = new ArrayList<>();
                         ButtonGroup group2 = new ButtonGroup();
                         listResponseOptionsByParentIdUC.list(responseOption.getId()).forEach(responseOption2 -> {

@@ -140,7 +140,7 @@ public class SubresponseOptionsRepository implements SubresponseOptionsService {
     }
 
     @Override
-    public List<SubresponseOptions> findSubresponseOptionsBySubresponseText(String text) {
+    public Optional<SubresponseOptions> findSubresponseOptionsBySubresponseText(String text) {
         String query = "SELECT * FROM subresponse_options WHERE subresponse_text = ?";
         List<SubresponseOptions> subresponseOptionsList = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -156,10 +156,11 @@ public class SubresponseOptionsRepository implements SubresponseOptionsService {
                 subresponseOptions.setSubresponseText(rs.getString("subresponse_text"));
                 subresponseOptions.setResponseOptionsId(rs.getInt("responseoptions_id"));
                 subresponseOptionsList.add(subresponseOptions);
+                return Optional.of(subresponseOptions);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return subresponseOptionsList;
+        return Optional.empty();
     }
 }

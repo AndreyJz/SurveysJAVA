@@ -11,6 +11,6 @@ public interface SubresponseOptionsService {
     void deleteSubresponseOptions(int id);
     Optional<SubresponseOptions> findSubresponseOptionsById(int id);
     List<SubresponseOptions> listSubresponseOptions();
-    List<SubresponseOptions> findSubresponseOptionsBySubresponseText(String text);
+    Optional<SubresponseOptions> findSubresponseOptionsBySubresponseText(String text);
     List<SubresponseOptions> listSubresponseOptionsByResponseOptionsId(int id);
 }

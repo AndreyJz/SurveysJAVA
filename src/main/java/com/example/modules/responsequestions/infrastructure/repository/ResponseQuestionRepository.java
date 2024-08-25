@@ -43,35 +43,6 @@ public class ResponseQuestionRepository implements ResponseQuestionService {
     }
 
     @Override
-    public void updateResponseQuestion(ResponseQuestion responseQuestion) {
-        String query = "UPDATE response_question SET response_id = ?, subresponses_id = ?, responsetext = ? WHERE id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, responseQuestion.getResponseId());
-            ps.setInt(2, responseQuestion.getSubresponsesId());
-            ps.setString(3, responseQuestion.getResponseText());
-            ps.setInt(4, responseQuestion.getId());
-            ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Response Question has been updated!", "Success", JOptionPane.PLAIN_MESSAGE);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e.getMessage(), "An Error has occurred", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    @Override
-    public void deleteResponseQuestion(int id) {
-        String query = "DELETE FROM response_question WHERE id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, id);
-            ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Response Question has been deleted!", "Success", JOptionPane.PLAIN_MESSAGE);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e.getMessage(), "An Error has occurred", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    @Override
     public Optional<ResponseQuestion> findResponseQuestionById(int id) {
         String query = "SELECT * FROM response_question WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -132,26 +103,5 @@ public class ResponseQuestionRepository implements ResponseQuestionService {
             JOptionPane.showMessageDialog(null, e.getMessage(), "An Error has occurred", JOptionPane.ERROR_MESSAGE);
         }
         return responseQuestions;
-    }
-
-    @Override
-    public Optional<ResponseQuestion> findResponseQuestionsByText(String responseText) {
-        String query = "SELECT * FROM response_question WHERE responsetext LIKE ?";
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setString(1, "%" + responseText + "%");
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                ResponseQuestion responseQuestion = new ResponseQuestion();
-                responseQuestion.setId(rs.getInt("id"));
-                responseQuestion.setResponseId(rs.getInt("response_id"));
-                responseQuestion.setSubresponsesId(rs.getInt("subresponses_id"));
-                responseQuestion.setResponseText(rs.getString("responsetext"));
-                return Optional.of(responseQuestion);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e.getMessage(), "An Error has occurred", JOptionPane.ERROR_MESSAGE);
-        }
-        return Optional.empty();
     }
 }
