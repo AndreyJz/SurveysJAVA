@@ -3,11 +3,16 @@ package com.example.modules.survey.infrastructure.controller;
 import com.example.UI.infrastructure.controller.*;
 import com.example.modules.categoriescatalog.domain.entity.CategoriesCatalog;
 import com.example.modules.chapter.domain.entity.Chapter;
+import com.example.modules.login.infrastructure.controller.LoginController;
 import com.example.modules.responseoptions.application.FindResponseOptionsByNameUC;
 import com.example.modules.responseoptions.application.ListResponseOptionsByParentIdUC;
 import com.example.modules.responseoptions.application.ListResponseOptionsByQuestionIdUC;
 import com.example.modules.responseoptions.domain.entity.ResponseOptions;
+import com.example.modules.responsequestions.application.CreateResponseQuestionUC;
 import com.example.modules.responsequestions.domain.entity.ResponseQuestion;
+import com.example.modules.responsequestions.domain.service.ResponseQuestionService;
+import com.example.modules.responsequestions.infrastructure.controller.ResponseQuestionController;
+import com.example.modules.responsequestions.infrastructure.repository.ResponseQuestionRepository;
 import com.example.modules.subresponseoptions.application.FindSubresponseOptionsBySubresponseTextUC;
 import com.example.modules.subresponseoptions.application.ListSubresponseOptionsByResponseOptionsIdUC;
 import com.example.modules.subresponseoptions.domain.entity.SubresponseOptions;
@@ -15,6 +20,7 @@ import com.example.modules.survey.application.*;
 import com.example.modules.chapter.application.*;
 import com.example.modules.question.application.*;
 import com.example.modules.survey.domain.entity.Survey;
+import com.google.protobuf.StringValue;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -45,6 +51,8 @@ public class SurveyController extends JFrame implements ActionListener {
     private ListSubresponseOptionsByResponseOptionsIdUC listSubresponseOptionsByResponseOptionsIdUC;
     private FindResponseOptionsByNameUC findResponseOptionsByNameUC;
     private FindSubresponseOptionsBySubresponseTextUC findSubresponseOptionsBySubresponseTextUC;
+    private Map<Integer,List<String>> responsesOption = new LinkedHashMap<>();
+    private Map<Integer,List<String>> subResponses = new LinkedHashMap<>();
 
     private JPanel mainPanel;
     private JPanel contentPanel;
@@ -149,8 +157,10 @@ public class SurveyController extends JFrame implements ActionListener {
         });
 
         nextButton = new JButton("Next ->");
+        nextButton.setBackground(new Color(236, 224, 220));
         nextButton.addActionListener(this);
-        backButton = new JButton("<- Go Back");
+        backButton = new JButton("Exitoooo");
+        backButton.setBackground(new Color(236, 224, 220));
         backButton.addActionListener(this);
 
         mainPanel.add(selectLabel);
@@ -190,12 +200,14 @@ public class SurveyController extends JFrame implements ActionListener {
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         sendButton = new JButton("Send");
+        sendButton.setBackground(new Color(236, 224, 220));
         sendButton.addActionListener(this);
-        cancelButton = new JButton("Exit");
+        cancelButton = new JButton("<- Go Back");
+        cancelButton.setBackground(new Color(236, 224, 220));
         cancelButton.addActionListener(this);
 
-        buttonPanel.add(sendButton);
         buttonPanel.add(cancelButton);
+        buttonPanel.add(sendButton);
 
         contentPanel.add(buttonPanel, BorderLayout.SOUTH);
 
@@ -243,12 +255,12 @@ public class SurveyController extends JFrame implements ActionListener {
             gbc.gridx = 1;
             content.add(questionLabel, gbc);
 
-            if (question.getResponseType().equals("radio") || question.getResponseType().equals("checkbox")) {
-                ButtonGroup group = new ButtonGroup();
+            ButtonGroup group = new ButtonGroup();
 
-                listResponseOptionsByQuestionIdUC.list(question.getId()).forEach(responseOption -> {
-                    if (responseOption.getParentResponseId() == 0) {
-                        JRadioButton response = new JRadioButton(responseOption.getOptionText() + ".");
+            listResponseOptionsByQuestionIdUC.list(question.getId()).forEach(responseOption -> {
+                if (responseOption.getParentResponseId() == 0) {
+                    if (responseOption.getTypeComponentHtml().equals("radio") || responseOption.getTypeComponentHtml().equals("checkbox")) {
+                        JRadioButton response = new JRadioButton(responseOption.getOptionText());
                         response.setBackground(new Color(0x123456));
                         response.setForeground(new Color(236, 224, 220));
                         gbc.gridy = row.getAndIncrement();
@@ -256,12 +268,19 @@ public class SurveyController extends JFrame implements ActionListener {
                         group.add(response);
                         content.add(response, gbc);
 
+                        response.addItemListener(e -> {
+                            String selectedRTA = response.getText();
+                            Optional<ResponseOptions> rta = findResponseOptionsByNameUC.find(selectedRTA);
+                            List<String> list = Arrays.asList(String.valueOf(rta.get().getId()), selectedRTA);
+                            responsesOption.put(rta.get().getQuestionId(),list);
+                        });
+
                         List<JRadioButton> responseOptionsSons = new ArrayList<>();
                         ButtonGroup group2 = new ButtonGroup();
                         listResponseOptionsByParentIdUC.list(responseOption.getId()).forEach(responseOption2 -> {
                             if (responseOption2.getTypeComponentHtml().equals("radio") || responseOption2.getTypeComponentHtml().equals("checkbox")) {
                                 System.out.println(responseOption2.getOptionText());
-                                JRadioButton response2 = new JRadioButton(responseOption2.getOptionText() + ".");
+                                JRadioButton response2 = new JRadioButton(responseOption2.getOptionText());
                                 response2.setVisible(false);
                                 response2.setBackground(new Color(0x123456));
                                 response2.setForeground(new Color(236, 224, 220));
@@ -271,12 +290,19 @@ public class SurveyController extends JFrame implements ActionListener {
                                 responseOptionsSons.add(response2);
                                 group2.add(response2);
 
+                                response2.addItemListener(e -> {
+                                    String selectedRTA = response2.getText();
+                                    Optional<ResponseOptions> rta = findResponseOptionsByNameUC.find(selectedRTA);
+                                    List<String> list = Arrays.asList(String.valueOf(rta.get().getId()), selectedRTA);
+                                    responsesOption.put(rta.get().getQuestionId(),list);
+                                });
+
                                 ButtonGroup group3 = new ButtonGroup();
                                 List<JRadioButton> subResponseButtons = new ArrayList<>();
                                 List<SubresponseOptions> subResponseOptions = listSubresponseOptionsByResponseOptionsIdUC.list(responseOption2.getId());
                                 for (SubresponseOptions subResponseOption : subResponseOptions) {
                                     System.out.println(subResponseOption.getSubresponseText());
-                                    JRadioButton response3 = new JRadioButton(subResponseOption.getSubresponseText() + ".");
+                                    JRadioButton response3 = new JRadioButton(subResponseOption.getSubresponseText());
                                     response3.setVisible(false);
                                     response3.setBackground(new Color(0x123456));
                                     response3.setForeground(new Color(236, 224, 220));
@@ -285,6 +311,14 @@ public class SurveyController extends JFrame implements ActionListener {
                                     content.add(response3, gbc);
                                     subResponseButtons.add(response3);
                                     group3.add(response3);
+
+                                    response3.addItemListener(e -> {
+                                        String selectedRTA = response3.getText();
+                                        Optional<SubresponseOptions> rta = findSubresponseOptionsBySubresponseTextUC.find(selectedRTA);
+                                        List<String> list = Arrays.asList(String.valueOf(rta.get().getId()), selectedRTA);
+                                        subResponses.put(rta.get().getResponseOptionsId(),list);
+                                    });
+
                                 }
 
                                 response2.addItemListener(e -> {
@@ -292,6 +326,7 @@ public class SurveyController extends JFrame implements ActionListener {
                                     for (JRadioButton subOptionButton : subResponseButtons) {
                                         subOptionButton.setVisible(selected);
                                         group3.clearSelection();
+                                        group2.getSelection();
                                     }
                                 });
 
@@ -304,18 +339,24 @@ public class SurveyController extends JFrame implements ActionListener {
                                 });
 
                             } else {
-                                JLabel responseLabel = new JLabel(responseOption2.getOptionText() + ".");
+                                JLabel responseLabel = new JLabel(responseOption2.getOptionText());
                                 responseLabel.setForeground(new Color(236, 224, 220));
                                 responseLabel.setBackground(new Color(0x123456));
                                 JTextField response2 = new JTextField();
                                 response2.setForeground(new Color(236, 224, 220));
+
+                                response2.addActionListener(e -> {
+                                    String selectedRTA = response2.getText();
+                                    List<String> list = Arrays.asList(String.valueOf(responseOption2.getId()), selectedRTA);
+                                    responsesOption.put(responseOption.getId(),list);
+                                });
                             }
                         });
 
                         List<JRadioButton> subResponseButtons = new ArrayList<>();
                         List<SubresponseOptions> subresponseOptions = listSubresponseOptionsByResponseOptionsIdUC.list(responseOption.getId());
                         for (SubresponseOptions subResponseOption : subresponseOptions) {
-                            JRadioButton response2 = new JRadioButton(subResponseOption.getSubresponseText() + ".");
+                            JRadioButton response2 = new JRadioButton(subResponseOption.getSubresponseText());
                             response2.setVisible(false);
                             response2.setBackground(new Color(0x123456));
                             response2.setForeground(new Color(236, 224, 220));
@@ -324,6 +365,13 @@ public class SurveyController extends JFrame implements ActionListener {
                             group2.add(response2);
                             subResponseButtons.add(response2);
                             content.add(response2, gbc);
+
+                            response2.addItemListener(e -> {
+                                String selectedRTA = response2.getText();
+                                Optional<SubresponseOptions> rta = findSubresponseOptionsBySubresponseTextUC.find(selectedRTA);
+                                List<String> list = Arrays.asList(String.valueOf(rta.get().getId()), selectedRTA);
+                                subResponses.put(rta.get().getResponseOptionsId(),list);
+                            });
                         }
 
                         response.addItemListener(e -> {
@@ -333,14 +381,21 @@ public class SurveyController extends JFrame implements ActionListener {
                                 group2.clearSelection();
                             }
                         });
+
+                    } else {
+                        JTextField response = new JTextField();
+                        gbc.gridy = row.getAndIncrement();
+                        gbc.gridx = 1;
+                        content.add(response, gbc);
+
+                        response.addActionListener(e -> {
+                            String selectedRTA = response.getText();
+                            List<String> list = Arrays.asList(String.valueOf(responseOption.getId()), selectedRTA);
+                            responsesOption.put(responseOption.getQuestionId(),list);
+                        });
                     }
-                });
-            } else {
-                JTextField response = new JTextField();
-                gbc.gridy = row.getAndIncrement();
-                gbc.gridx = 1;
-                content.add(response, gbc);
-            }
+                }
+            });
         });
     }
 
@@ -374,17 +429,12 @@ public class SurveyController extends JFrame implements ActionListener {
             generateSurvey(survey.get().getId());
         } else if (e.getSource() == backButton) {
             dispose();
+            new LoginController();
         } else if (e.getSource() == sendButton) {
-//            mainPanel.setVisible(false);
-//            String selected = (String) selectComboBox.getSelectedItem();
-//            try {
-//                Method filterMethod = findServiceEntity.getClass().getMethod("find", String.class);
-//                selectedUpdate = (Optional<?>) filterMethod.invoke(findServiceEntity, selected);
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
-
-//            generateUpdateForm(selectedUpdate.get());
+            ResponseQuestionService rs = new ResponseQuestionRepository();
+            CreateResponseQuestionUC crq = new CreateResponseQuestionUC(rs);
+            ResponseQuestionController c = new ResponseQuestionController(crq);
+            c.createResponseQuestion(responsesOption,subResponses);
         }
     }
 }

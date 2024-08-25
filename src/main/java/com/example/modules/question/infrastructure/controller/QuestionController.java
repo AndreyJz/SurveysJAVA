@@ -59,10 +59,10 @@ public class QuestionController {
     }
 
     // Handle Delete
-    public QuestionController(DeleteQuestionUC deleteQuestionUC, ListChaptersUC listChaptersUC, FindChapterByNameUC findChapterByNameUC) {
+    public QuestionController(DeleteQuestionUC deleteQuestionUC, ListQuestionsUC listQuestionsUC, FindQuestionByNameUC findQuestionByNameUC) {
         this.deleteQuestionUC = deleteQuestionUC;
-        this.listChaptersUC = listChaptersUC;
-        this.findChapterByNameUC = findChapterByNameUC;
+        this.listQuestionsUC = listQuestionsUC;
+        this.findQuestionByNameUC = findQuestionByNameUC;
     }
 
     public void createQuestion() {

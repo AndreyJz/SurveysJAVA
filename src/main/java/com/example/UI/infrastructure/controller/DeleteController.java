@@ -79,8 +79,11 @@ public class DeleteController extends JFrame implements ActionListener {
                     case "Question":
                         propertyName = "CommentQuestion";
                         break;
-                    case "Survey", "CategoryCatalog":
+                    case "Survey", "CategoriesCatalog":
                         propertyName = "Name";
+                        break;
+                    case "SubresponseOptions":
+                        propertyName = "SubresponseText";
                         break;
                     default:
                         propertyName = "OptionText";

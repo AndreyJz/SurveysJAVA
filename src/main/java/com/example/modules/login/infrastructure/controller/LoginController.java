@@ -111,13 +111,13 @@ public class LoginController extends JFrame implements ActionListener {
             boolean admin = role.checkRole(logged.get().getId());
 
             if (admin) {
-                setVisible(false);
+                dispose();
                 AdminForumController menu = new AdminForumController();
                 menu.setResizable(false);
                 menu.setLocationRelativeTo(null);
                 menu.setVisible(true);
             } else {
-                setVisible(false);
+                dispose();
                 SurveySercive ss = new SurveyRepository();
                 ChapterService cs = new ChapterRepository();
                 QuestionService qs = new QuestionRepository();

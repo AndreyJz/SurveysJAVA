@@ -4,6 +4,7 @@ import com.example.modules.chapter.application.*;
 import com.example.modules.chapter.domain.service.ChapterService;
 import com.example.modules.chapter.infrastructure.controller.ChapterController;
 import com.example.modules.chapter.infrastructure.repository.ChapterRepository;
+import com.example.modules.login.infrastructure.controller.LoginController;
 import com.example.modules.question.application.CreateQuestionUC;
 import com.example.modules.question.application.DeleteQuestionUC;
 import com.example.modules.question.application.FindQuestionByIdUC;
@@ -67,7 +68,6 @@ public class AdminForumController extends JFrame implements ActionListener {
     private static final String DELETE = "Delete";
     private static final String EXIT = "Exit";
 
-
     private Map<String, JPanel> panels;
     private Map<String, JButton> buttons;
 
@@ -83,6 +83,8 @@ public class AdminForumController extends JFrame implements ActionListener {
         setSize(850, 550);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        getContentPane().setBackground(new Color(0x123456));
+
 
         panels = new HashMap<>();
         buttons = new HashMap<>();
@@ -91,10 +93,12 @@ public class AdminForumController extends JFrame implements ActionListener {
 
         mainMenuPanel = new JPanel(new GridLayout(0,2,25,50));
         mainMenuPanel.setBounds(50,25,750,450);
+        mainMenuPanel.setBackground(new Color(0x123456));
         initializeMainPanel();
         add(mainMenuPanel);
 
         contentPanel = new JPanel(new CardLayout());
+        contentPanel.setBackground(new Color(0x123456));
         initializeSubPanels();
         add(contentPanel, BorderLayout.CENTER);
         contentPanel.setVisible(false);
@@ -103,16 +107,17 @@ public class AdminForumController extends JFrame implements ActionListener {
     }
 
     private void initializeMainPanel() {
-        String[] mainOptions = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "SubresponseOptions", "ResponseQuestion"};
+        String[] mainOptions = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "SubresponseOptions", "ResponseQuestion", "Exitoooo"};
         for (String option : mainOptions) {
             addButton(mainMenuPanel, option, this);
         }
     }
 
     private void initializeSubPanels() {
-        String[] entities = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "SubresponseOptions", "ResponseQuestion"};
+        String[] entities = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "SubresponseOptions", "ResponseQuestion", "Exitoooo"};
         for (String entity : entities) {
             JPanel panel = new JPanel(new GridLayout(6, 1, 10, 10));
+            panel.setBackground(new Color(0x123456));
             addEntityButtons(panel, entity);
             panels.put(entity, panel);
             contentPanel.add(panel, entity);
@@ -130,7 +135,8 @@ public class AdminForumController extends JFrame implements ActionListener {
 
     private void addButton(JPanel panel, String text, ActionListener listener) {
         JButton button = new JButton(text);
-        button.setBackground(Color.LIGHT_GRAY);
+        button.setBackground(new Color(236, 224, 220));
+        button.setFont(new Font("Calibri", Font.BOLD, 20));
 
         ImageIcon icon = new ImageIcon();
 
@@ -178,7 +184,12 @@ public class AdminForumController extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (panels.containsKey(command)) {
-            showPanel(command);
+            if (!command.equals("Exitoooo")) {
+                showPanel(command);
+            } else {
+                dispose();
+                new LoginController();
+            }
         } else if (command.startsWith(CREATE)) {
             handleCreate(command.split(" ")[1]);
         } else if (command.startsWith(LIST)) {
@@ -392,8 +403,8 @@ public class AdminForumController extends JFrame implements ActionListener {
             ccc.deleteChapter();
         } else if (entity.equals("Question")) {
             DeleteQuestionUC dq = new DeleteQuestionUC(qs);
-            ListChaptersUC lc = new ListChaptersUC(cs);
-            FindChapterByNameUC fc = new FindChapterByNameUC(cs);
+            ListQuestionsUC lc = new ListQuestionsUC(qs);
+            FindQuestionByNameUC fc = new FindQuestionByNameUC(qs);
             QuestionController c = new QuestionController(dq,lc,fc);
             c.deleteQuestion();
         } else if (entity.equals("CategoriesCatalog")) {

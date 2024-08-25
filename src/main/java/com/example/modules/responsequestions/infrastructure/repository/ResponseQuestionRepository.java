@@ -32,7 +32,11 @@ public class ResponseQuestionRepository implements ResponseQuestionService {
         String query = "INSERT INTO response_question (response_id, subresponses_id, responsetext) VALUES (?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, responseQuestion.getResponseId());
-            ps.setInt(2, responseQuestion.getSubresponsesId());
+            if (responseQuestion.getSubresponsesId() == 0) {
+                ps.setNull(2, Types.INTEGER);
+            } else {
+                ps.setInt(2, responseQuestion.getSubresponsesId());
+            }
             ps.setString(3, responseQuestion.getResponseText());
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Response Question has been created!", "Success", JOptionPane.PLAIN_MESSAGE);

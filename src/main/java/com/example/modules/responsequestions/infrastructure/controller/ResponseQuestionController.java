@@ -25,11 +25,8 @@ public class ResponseQuestionController {
     private ListResponseOptionsUC listResponseOptionsUC;
 
     // Handle Create
-    public ResponseQuestionController(CreateResponseQuestionUC createResponseQuestionUC, ListResponseQuestionsUC listResponseQuestionsUC, FindResponseQuestionByNameUC findResponseQuestionByNameUC, ListResponseOptionsUC listResponseOptionsUC, FindResponseOptionsByNameUC findResponseOptionsByNameUC, ListSubresponseOptionsUC listSubresponseOptionsUC, FindSubresponseOptionsBySubresponseTextUC findSubresponseOptionsBySubresponseTextUC) {
+    public ResponseQuestionController(CreateResponseQuestionUC createResponseQuestionUC) {
         this.createResponseQuestionUC = createResponseQuestionUC;
-        this.listResponseQuestionsUC = listResponseQuestionsUC;
-        this.findResponseQuestionByNameUC = findResponseQuestionByNameUC;
-        this.listResponseOptionsUC = listResponseOptionsUC;
     }
 
     public ResponseQuestionController(ListResponseQuestionsUC listResponseQuestionsUC) {
@@ -40,10 +37,21 @@ public class ResponseQuestionController {
         this.findResponseQuestionByIdUC = findResponseQuestionByIdUC;
     }
 
-    public void createResponseQuestion() {
-        ResponseQuestion responseQuestion = new ResponseQuestion();
-        mapOfList = new LinkedHashMap<>();
-        this.createController = new CreateController(responseQuestion, createResponseQuestionUC, mapOfList);
+    public void createResponseQuestion(Map<Integer,List<String>> responsesOP, Map<Integer,List<String>> subResponses) {
+        responsesOP.forEach((id,info) -> {
+            ResponseQuestion responseQuestion = new ResponseQuestion();
+            responseQuestion.setResponseId(Integer.parseInt(info.get(0)));
+            responseQuestion.setSubresponsesId(0);
+            responseQuestion.setResponseText(info.get(1));
+            this.createResponseQuestionUC.create(responseQuestion);
+        });
+        subResponses.forEach((id,info) -> {
+            ResponseQuestion responseQuestion = new ResponseQuestion();
+            responseQuestion.setResponseId(id);
+            responseQuestion.setSubresponsesId(Integer.parseInt(info.get(0)));
+            responseQuestion.setResponseText(info.get(1));
+            this.createResponseQuestionUC.create(responseQuestion);
+        });
     }
 
     public void listResponseQuestions() {
