@@ -20,6 +20,11 @@ import com.example.modules.survey.application.*;
 import com.example.modules.chapter.application.*;
 import com.example.modules.question.application.*;
 import com.example.modules.survey.domain.entity.Survey;
+import com.example.modules.survey_archive.application.CreateSurvey_ArchiveUC;
+import com.example.modules.survey_archive.domain.entity.Survey_Archive;
+import com.example.modules.survey_archive.domain.service.Survey_ArchiveService;
+import com.example.modules.survey_archive.infrastructure.controller.Survey_ArchiveController;
+import com.example.modules.survey_archive.infrastructure.repository.Survey_ArchiveRepository;
 import com.google.protobuf.StringValue;
 
 import javax.swing.*;
@@ -53,6 +58,7 @@ public class SurveyController extends JFrame implements ActionListener {
     private FindSubresponseOptionsBySubresponseTextUC findSubresponseOptionsBySubresponseTextUC;
     private Map<Integer,List<String>> responsesOption = new LinkedHashMap<>();
     private Map<Integer,List<String>> subResponses = new LinkedHashMap<>();
+    private Map<Integer,List<String>> parentResponses = new LinkedHashMap<>();
 
     private JPanel mainPanel;
     private JPanel contentPanel;
@@ -65,6 +71,7 @@ public class SurveyController extends JFrame implements ActionListener {
     private JButton toggleButton;
     private JComboBox<String> selectComboBox;
     private List<JPanel> chapterPanels;
+    private int surveyID;
     Map<String, List<Object>> mapOfList;
 
     public SurveyController(ListSurveysUC listSurveysUC) {
@@ -218,6 +225,7 @@ public class SurveyController extends JFrame implements ActionListener {
     public void generateChapter(String title,int chapterId) {
         responsesOption.clear();
         subResponses.clear();
+        parentResponses.clear();
 
         JPanel content = new JPanel();
         content.setLayout(new GridBagLayout());
@@ -297,7 +305,7 @@ public class SurveyController extends JFrame implements ActionListener {
                                     String selectedRTA = response2.getText();
                                     Optional<ResponseOptions> rta = findResponseOptionsByNameUC.find(selectedRTA);
                                     List<String> list = Arrays.asList(String.valueOf(rta.get().getId()), selectedRTA);
-                                    responsesOption.put(rta.get().getQuestionId(),list);
+                                    parentResponses.put(rta.get().getParentResponseId(),list);
                                 });
 
                                 ButtonGroup group3 = new ButtonGroup();
@@ -438,15 +446,21 @@ public class SurveyController extends JFrame implements ActionListener {
             mainPanel.setVisible(false);
             String selectedItem = (String) selectComboBox.getSelectedItem();
             Optional<Survey> survey = findSurveyByNameUC.find(selectedItem);
-            generateSurvey(survey.get().getId());
+            surveyID = survey.get().getId();
+            generateSurvey(surveyID);
         } else if (e.getSource() == backButton) {
             dispose();
             new LoginController();
         } else if (e.getSource() == sendButton) {
             ResponseQuestionService rs = new ResponseQuestionRepository();
             CreateResponseQuestionUC crq = new CreateResponseQuestionUC(rs);
-            ResponseQuestionController c = new ResponseQuestionController(crq);
-            c.createResponseQuestion(responsesOption,subResponses);
+            ResponseQuestionController rqc = new ResponseQuestionController(crq);
+            rqc.createResponseQuestion(responsesOption,subResponses);
+
+            Survey_ArchiveService sas = new Survey_ArchiveRepository();
+            CreateSurvey_ArchiveUC csa = new CreateSurvey_ArchiveUC(sas);
+            Survey_ArchiveController sac = new Survey_ArchiveController(csa);
+            sac.createSurvey_Archive(surveyID,responsesOption,subResponses,parentResponses);
         }
     }
 }

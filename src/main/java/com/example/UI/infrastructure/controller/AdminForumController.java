@@ -52,6 +52,10 @@ import com.example.modules.subresponseoptions.application.*;
 import com.example.modules.subresponseoptions.domain.service.SubresponseOptionsService;
 import com.example.modules.subresponseoptions.infrastructure.controller.SubresponseOptionsController;
 import com.example.modules.subresponseoptions.infrastructure.repository.SubresponseOptionsRepository;
+import com.example.modules.survey_archive.application.ListSurveys_ArchiveUC;
+import com.example.modules.survey_archive.domain.service.Survey_ArchiveService;
+import com.example.modules.survey_archive.infrastructure.controller.Survey_ArchiveController;
+import com.example.modules.survey_archive.infrastructure.repository.Survey_ArchiveRepository;
 
 import javax.swing.*;
 import java.awt.*;
@@ -107,14 +111,14 @@ public class AdminForumController extends JFrame implements ActionListener {
     }
 
     private void initializeMainPanel() {
-        String[] mainOptions = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "SubresponseOptions", "ResponseQuestion", "Exitoooo"};
+        String[] mainOptions = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "SubresponseOptions", "ResponseQuestion", "Surveys_Archives", "Exitoooo"};
         for (String option : mainOptions) {
             addButton(mainMenuPanel, option, this);
         }
     }
 
     private void initializeSubPanels() {
-        String[] entities = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "SubresponseOptions", "ResponseQuestion", "Exitoooo"};
+        String[] entities = {"Survey", "Chapter", "Question", "CategoriesCatalog", "ResponseOptions", "SubresponseOptions", "ResponseQuestion", "Surveys_Archives", "Exitoooo"};
         for (String entity : entities) {
             JPanel panel = new JPanel(new GridLayout(6, 1, 10, 10));
             panel.setBackground(new Color(0x123456));
@@ -222,6 +226,7 @@ public class AdminForumController extends JFrame implements ActionListener {
     ResponseOptionsService rs = new ResponseOptionsRepository();
     SubresponseOptionsService sop = new SubresponseOptionsRepository();
     ResponseQuestionService rqs = new ResponseQuestionRepository();
+    Survey_ArchiveService sas = new Survey_ArchiveRepository();
 
     private void handleCreate(String entity) {
         if (entity.equals("Survey")) {
@@ -294,6 +299,10 @@ public class AdminForumController extends JFrame implements ActionListener {
             ListResponseQuestionsUC lrq = new ListResponseQuestionsUC(rqs);
             ResponseQuestionController c = new ResponseQuestionController(lrq);
             c.listResponseQuestions();
+        } else if (entity.equals("Surveys_Archives")) {
+            ListSurveys_ArchiveUC lsa = new ListSurveys_ArchiveUC(sas);
+            Survey_ArchiveController c = new Survey_ArchiveController(lsa);
+            c.listSurveys_Archive();
         }
     }
 

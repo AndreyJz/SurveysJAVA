@@ -111,14 +111,14 @@ CREATE TABLE response_question (
                                    CONSTRAINT fk_response_question_subresponses_id FOREIGN KEY (subresponses_id) REFERENCES subresponse_options(id)
 );
 
-CREATE TABLE survey_json (
+CREATE TABLE survey_archive (
                              id INT AUTO_INCREMENT,
                              created_at TIMESTAMP(6),
                              updated_at TIMESTAMP(6),
                              survey_id INT,
-                             payload JSON,
-                             CONSTRAINT pk_survey_json_id PRIMARY KEY (id),
-                             CONSTRAINT fk_survey_json_survey_id FOREIGN KEY (survey_id) REFERENCES surveys(id)
+                             payload TEXT,
+                             CONSTRAINT pk_survey_archive_id PRIMARY KEY (id),
+                             CONSTRAINT fk_survey_archive_survey_id FOREIGN KEY (survey_id) REFERENCES surveys(id)
 );
 
 INSERT INTO surveys (name, description, created_at, updated_at)

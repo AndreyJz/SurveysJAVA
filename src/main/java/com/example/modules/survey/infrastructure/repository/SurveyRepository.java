@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.sql.*;
 import java.util.*;
 
-public class SurveyRepository implements SurveySercive {
+public class SurveyRepository implements SurveySercive{
     private Connection connection;
 
     public SurveyRepository() {
@@ -31,7 +31,7 @@ public class SurveyRepository implements SurveySercive {
             preparedStatement.setString(1, survey.getDescription());
             preparedStatement.setString(2, survey.getName());
             preparedStatement.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Survey has been created!", "Success", JOptionPane.PLAIN_MESSAGE);
+//            JOptionPane.showMessageDialog(null, "Survey has been created!", "Success", JOptionPane.PLAIN_MESSAGE);
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, e.getMessage(), "An Error has occurred", JOptionPane.ERROR_MESSAGE);
